@@ -1,0 +1,1520 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Пульт parfume de Paris</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: рабочий пульт — слева навигация по разделам, сверху поиск артикула; основная зона — плотные таблицы, графики и провалы внутрь */
+:root {
+  --bg: #F2F3F5; --panel: #FFFFFF; --fg: #171A1F; --muted: #5F6672; --line: #DDE0E5; --head: #ECEEF1; --hover: #F5F7F9;
+  --accent: #0D6A65; --accent-soft: #DBEEEB; --me: #FFF4D6;
+  --good: #20774A; --bad: #B4362E; --warn: #A3640F; --good-soft: #DFF1E6; --bad-soft: #F8E1DE; --warn-soft: #F7ECDA;
+  --c1: #0D6A65; --c2: #C0662B; --c3: #5B5FC7; --c4: #8A8F98; --c5: #2E8B57;
+  --ui: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #101216; --panel: #181B20; --fg: #E5E7EA; --muted: #9AA1AB; --line: #2A2E36; --head: #1F232A; --hover: #20252C;
+  --accent: #4DB6AE; --accent-soft: #15332F; --me: #2F2A1A;
+  --good: #5CBB83; --bad: #EF7B70; --warn: #E1A64B; --good-soft: #17301F; --bad-soft: #3A201D; --warn-soft: #33281A;
+  --c1: #4DB6AE; --c2: #E58C52; --c3: #8D90F0; --c4: #8A8F98; --c5: #6BCB8F; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #101216; --panel: #181B20; --fg: #E5E7EA; --muted: #9AA1AB; --line: #2A2E36; --head: #1F232A; --hover: #20252C;
+  --accent: #4DB6AE; --accent-soft: #15332F; --me: #2F2A1A;
+  --good: #5CBB83; --bad: #EF7B70; --warn: #E1A64B; --good-soft: #17301F; --bad-soft: #3A201D; --warn-soft: #33281A;
+  --c1: #4DB6AE; --c2: #E58C52; --c3: #8D90F0; --c4: #8A8F98; --c5: #6BCB8F; color-scheme: dark }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font: 13.5px/1.45 var(--ui); }
+.app { display: grid; grid-template-columns: 200px minmax(0, 1fr); min-height: 100vh; }
+aside { background: var(--panel); border-right: 1px solid var(--line); padding: 14px 10px; display: flex; flex-direction: column; gap: 3px;
+  padding-left: max(10px, env(safe-area-inset-left, 0px)); position: sticky; top: 0; height: 100vh; overflow: auto; }
+.brand { font-weight: 700; font-size: 15px; padding: 2px 8px 10px; }
+.brand small { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; }
+aside button { all: unset; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-radius: 6px; color: var(--fg); }
+aside button:hover { background: var(--hover); }
+aside button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+aside .help { margin-top: auto; color: var(--muted); }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+kbd { font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+main { padding-block: 14px 60px; padding-left: 18px; padding-right: max(18px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; align-content: start; min-width: 0; }
+.top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 4px; }
+.search { position: relative; flex: 1 1 320px; max-width: 520px; }
+.search input { width: 100%; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--fg); font: inherit; }
+.sugg { position: absolute; top: 100%; left: 0; right: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin-top: 4px; max-height: 360px; overflow: auto; z-index: 10; }
+.sugg div { padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; }
+.sugg div:hover, .sugg div.on { background: var(--accent-soft); }
+.meta { color: var(--muted); font-size: 12px; }
+h1 { font-size: 19px; margin: 0; font-weight: 700; text-wrap: balance; }
+h2 { font-size: 14.5px; margin: 0; font-weight: 600; }
+h3 { font-size: 13px; margin: 0; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.sp { justify-content: space-between; }
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); }
+.grid > *, .card > * { min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.kpis { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; display: grid; gap: 1px; }
+.kpi .v { font-family: var(--mono); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.kpi .l { font-size: 11.5px; color: var(--muted); }
+.d { font-family: var(--mono); font-size: 11.5px; font-weight: 600; }
+.up { color: var(--good); } .dn { color: var(--bad); } .wr { color: var(--warn); }
+.tw { overflow: auto; max-height: 560px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+th, td { padding: 5px 9px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; position: sticky; left: 0; background: inherit; z-index: 1; }
+thead th { position: sticky; top: 0; background: var(--head); color: var(--muted); font-weight: 600; font-size: 11.5px; cursor: pointer; z-index: 2; white-space: normal; vertical-align: bottom; min-width: 56px; user-select: none; }
+thead th:first-child { z-index: 3; background: var(--head); }
+thead th[data-s]::after { content: attr(data-s); margin-left: 3px; color: var(--accent); }
+tbody tr { background: var(--panel); }
+tbody tr:hover { background: var(--hover); }
+tbody tr.click { cursor: pointer; }
+tbody tr.sel td { background: var(--accent-soft); }
+tr.me td { background: var(--me); font-weight: 600; }
+td.l, th.l { text-align: left; }
+td.wrap { white-space: normal; min-width: 220px; }
+.pill { display: inline-block; padding: 1px 7px; border-radius: 99px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.p-high, .p-bad { background: var(--bad-soft); color: var(--bad); } .p-mid, .p-warn { background: var(--warn-soft); color: var(--warn); } .p-low, .p-mute { background: var(--head); color: var(--muted); }
+.p-A, .p-good { background: var(--good-soft); color: var(--good); } .p-B, .p-acc { background: var(--accent-soft); color: var(--accent); } .p-C { background: var(--head); color: var(--muted); }
+.btn { all: unset; cursor: pointer; padding: 6px 11px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); font-size: 12.5px; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+select, .inp { padding: 6px 9px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); color: var(--fg); font: inherit; max-width: 100%; }
+.inp.n { width: 92px; font-family: var(--mono); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; flex-wrap: wrap; }
+.seg button { all: unset; cursor: pointer; padding: 5px 10px; font-size: 12.5px; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+.chart { position: relative; height: 230px; }
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: 170px 1fr 84px; gap: 8px; align-items: center; font-size: 12.5px; }
+.bar .t { height: 12px; background: var(--head); border-radius: 3px; position: relative; overflow: hidden; }
+.bar .t i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+.stack { display: flex; height: 22px; border-radius: 5px; overflow: hidden; background: var(--head); }
+.stack i { display: block; height: 100%; min-width: 1px; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; background: var(--sw); vertical-align: -1px; }
+.rec { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.rec:last-child { border-bottom: 0; }
+.rec .ev { color: var(--muted); font-size: 12.5px; grid-column: 2; }
+.rec .act { grid-column: 2; font-size: 12.5px; }
+.lnk { color: var(--accent); cursor: pointer; text-decoration: none; }
+.lnk:hover { text-decoration: underline; }
+.note { font-size: 12px; color: var(--muted); max-width: 110ch; }
+.callout { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 13px; }
+.callout.w { border-color: var(--warn); background: var(--warn-soft); }
+.callout.b { border-color: var(--bad); background: var(--bad-soft); }
+textarea { width: 100%; min-height: 90px; border: 1px solid var(--line); border-radius: 8px; padding: 8px; font: inherit; background: var(--panel); color: var(--fg); }
+.ask { white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
+.empty { padding: 24px; text-align: center; color: var(--muted); }
+.mono { font-family: var(--mono); }
+.wf { display: grid; gap: 4px; }
+.wf .bar { grid-template-columns: 190px 1fr 140px; }
+.sim { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.sim label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); }
+.ov { position: fixed; inset: 0; background: color-mix(in srgb, var(--fg) 35%, transparent); z-index: 40; display: grid; place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.ov .card { max-width: 820px; max-height: 86vh; overflow: auto; }
+.rnp table td, .rnp table th { min-width: 64px; }
+.pbar { gap: 8px; } .pbar select, .pbar .inp { padding: 4px 8px; font-size: 12.5px; } .pbar input[type=date] { width: 138px; }
+.notes { display: grid; gap: 8px; } .slog { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13.5px; } ol.plan { margin: 0; padding-left: 20px; display: grid; gap: 6px; } .note-i { border-left: 3px solid var(--line); padding: 2px 0 2px 10px; } .note-i .meta { margin-bottom: 2px; }
+.rnp tr.sec td { background: var(--head); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding-top: 9px; }
+tr.bold td { font-weight: 600; }
+td.tot, th.tot { background: var(--head); font-weight: 600; }
+td.we, th.we { background: color-mix(in srgb, var(--head) 55%, var(--panel)); }
+td.cu1, .hm.cu1 { background: var(--good-soft); } td.cu2, .hm.cu2 { background: color-mix(in srgb, var(--good) 32%, var(--panel)); }
+td.cd1, .hm.cd1 { background: var(--bad-soft); } td.cd2, .hm.cd2 { background: color-mix(in srgb, var(--bad) 32%, var(--panel)); }
+.hm { margin: -5px -9px; padding: 5px 9px; }
+.hm.p1, .pp1 { background: var(--good-soft); color: var(--good); font-weight: 600; } .hm.p2, .pp2 { background: color-mix(in srgb, var(--good-soft) 45%, var(--panel)); }
+.hm.p4, .pp4 { background: var(--warn-soft); color: var(--warn); } .hm.p0 { color: var(--muted); } .pp3 { background: var(--head); }
+sup { font-size: 9px; color: var(--c3); margin-left: 1px; }
+@media (max-width: 760px) { .app { grid-template-columns: 1fr; } aside { position: static; height: auto; flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--line); } .brand { width: 100%; } aside .help { margin-top: 0; } .bar, .wf .bar { grid-template-columns: 110px 1fr 70px; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="app">
+  <aside id="nav"><div class="brand">Пульт WB <small id="built">загрузка…</small></div></aside>
+  <main>
+    <div class="top">
+      <div class="search"><input id="q" placeholder="Артикул WB, артикул продавца или аромат  ( / )" autocomplete="off"><div class="sugg" id="sugg" hidden></div></div>
+      <div class="row pbar" id="pbar"></div>
+    </div>
+    <div id="view"><div class="empty">Загружаю данные…</div></div>
+  </main>
+</div>
+<div class="ov" id="help" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.PULT_SITE = true; window.PULT_ENC = {"salt": "YTOuQ75z0iKj4d8GsIyzug==", "iter": 210000, "check": "sqK6OuPph8zFtKNfdiCPqGPzHNcHuDnEzTAcZzPW", "v": "202610301718", "notes": {"repo": "romanistileev/parfume-pult-notes", "tok": "81uO1OqAQqycAv5iKF+e3N+DSup+wQlg14AEzy9Hg8coQALOY0mM32MLn2EgxCe7c2M5yUY0RNGs82PRBD6oIy6UzcGZBve7FjN+Q9DUoZNzr8c47CzH6bI2eyqDYjWuduwDRJcw9t20NKf9tCooxOaTOmimlgEXgw=="}};</script>
+<script>
+/* ================= БАЗА ================= */
+const TABS = [["overview", "Обзор", "1"], ["today", "Сегодня", "T"], ["rnp", "РНП по дням", "D"], ["unit", "Юнитка", "2"], ["sku", "Артикул", "3"], ["traffic", "Трафик", "4"], ["comp", "Конкуренты", "5"], ["ads", "Реклама", "6"],
+  ["search", "Поиск", "7"], ["wh", "Склады", "8"], ["glue", "Склейки", "9"], ["novel", "Новинки и пары", "N"], ["aud", "Аудитория", "A"], ["cmp", "Сравнение ЛК", "0"], ["recs", "Рекомендации", "R"]];
+const cap = async n => { try { return (await window.claude?.use?.(n)) ?? null; } catch (e) { return null; } };
+const D = {}; const st = { tab: "overview", nm: null, period: "30", sort: {}, filters: {}, usub: "table", asub: "camps", tsub: "own", rsub: "nm", gran: "d", pd: "sum", scope: "nm", nsub: "cand", pp: "7", pc: "prev" };
+try { Object.assign(st, JSON.parse(localStorage.getItem("pult2") || "{}")); } catch (e) {}
+const save = () => { try { localStorage.setItem("pult2", JSON.stringify({ tab: st.tab, nm: st.nm, period: st.period, usub: st.usub, asub: st.asub, tsub: st.tsub,
+  rsub: st.rsub, gran: st.gran, rngd: st.rngd, rngw: st.rngw, pd: st.pd, scope: st.scope, rmet: st.rmet, rtop: st.rtop, rflt: st.rflt, amet: st.amet, anm: st.anm, cmet: st.cmet, kmet: st.kmet, nsub: st.nsub, pp: st.pp, pa: st.pa, pb: st.pb, pc: st.pc })); } catch (e) {} };
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const N = (v, d = 0) => { if (typeof d !== "number") d = 0; return v == null || v === "" || isNaN(v) ? "—" : Number(v).toLocaleString("ru-RU", { maximumFractionDigits: d, minimumFractionDigits: 0 }); };
+const P = (a, b) => (a != null && b) ? (a / b - 1) * 100 : null;
+const dlt = (v, inv = false, unit = "%") => v == null || !isFinite(v) ? "" : `<span class="d ${v === 0 ? "" : ((v > 0) !== inv ? "up" : "dn")}">${v > 0 ? "+" : ""}${N(v, Math.abs(v) < 10 ? 1 : 0)}${unit}</span>`;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmtD = s => s ? s.slice(8, 10) + "." + s.slice(5, 7) : "";
+const money = v => N(v); const pct = v => v == null ? "—" : N(v, 1) + "%";
+const netCls = v => v == null ? "—" : `<span class="${v < 0 ? "dn" : ""}">${N(v)}</span>`;
+const vcLink = (v, r) => r && r.nm ? `<a class="lnk" data-go="${r.nm}">${esc(v)}</a>` : esc(v);
+const abcPill = v => v && v !== "—" ? `<span class="pill p-${v}">${v}</span>` : "—";
+const pill = (t, c) => `<span class="pill p-${c}">${esc(t)}</span>`;
+let charts = [], AFTERQ = [];
+const killCharts = () => { charts.forEach(c => c.destroy()); charts = []; };
+const after = f => AFTERQ.push(f);
+
+async function load() {
+  const names = ["meta", "sku", "series", "total", "ads", "search", "market", "compare", "glue", "recs", "reviews", "traffic", "clusters", "wh", "unitx"];
+  await Promise.all(names.map(async n => { try { D[n] = await getData(n); } catch (e) { D[n] = null; } }));
+  D.byNm = Object.fromEntries((D.sku || []).map(s => [s.nm, s]));
+  D.order = (D.sku || []).slice().sort((a, b) => (b.p30?.orders || 0) - (a.p30?.orders || 0)).map(s => s.nm);
+  D.camp = Object.fromEntries((D.ads || []).map(c => [c.id, c]));
+  if (!st.nm || !D.byNm[st.nm]) st.nm = D.order[0];
+  $("#built").textContent = "данные на " + (D.meta?.built || "—");
+  nav(); render();
+}
+function nav() {
+  const a = $("#nav"); a.querySelectorAll("button").forEach(b => b.remove());
+  TABS.forEach(([k, t, key]) => { const b = document.createElement("button"); b.innerHTML = `<span>${t}</span><kbd>${key}</kbd>`; b.setAttribute("aria-current", st.tab === k); b.onclick = () => go(k); a.appendChild(b); });
+  const h = document.createElement("button"); h.className = "help"; h.innerHTML = `<span>Справка</span><kbd>?</kbd>`; h.onclick = help; a.appendChild(h);
+}
+function go(tab, nm) { if (tab) st.tab = tab; if (nm) st.nm = +nm; save(); nav(); render(); window.scrollTo(0, 0); }
+function render() {
+  killCharts(); AFTERQ = []; const v = $("#view"); try { pbar(); } catch (e) { console.error(e); }
+  try { v.innerHTML = (VIEWS[st.tab] || VIEWS.overview)(); const q = AFTERQ; AFTERQ = []; q.forEach(f => f()); bind(v); v.querySelectorAll("[data-end]").forEach(el => el.scrollLeft = el.scrollWidth); }
+  catch (e) { v.innerHTML = `<div class="card">Ошибка отображения: ${esc(e.message)}</div>`; console.error(e); }
+}
+
+/* ---------- таблицы ---------- */
+const TBL = {};
+function T(id, cols, rows, opt = {}) {
+  const s = st.sort[id];
+  if (s) rows = rows.slice().sort((a, b) => { const x = a[s.k], y = b[s.k]; if (x == null || x === "") return 1; if (y == null || y === "") return -1; return (typeof x === "string" ? x.localeCompare(y, "ru") : x - y) * s.d; });
+  TBL[id] = { cols, rows };
+  const h = cols.map(c => `<th data-k="${c[0]}" class="${c[3] || ""}" ${s && s.k === c[0] ? `data-s="${s.d > 0 ? "▲" : "▼"}"` : ""} ${c[4] ? `title="${esc(c[4])}"` : ""}>${c[1]}</th>`).join("");
+  const b = rows.map(r => `<tr class="${opt.click ? "click" : ""} ${opt.me && opt.me(r) ? "me" : ""} ${opt.sel && opt.sel(r) ? "sel" : ""}" ${opt.click ? `data-nm="${r.nm ?? ""}" data-id="${esc(r.id ?? "")}"` : ""}>` +
+    cols.map(c => `<td class="${c[3] || ""}">${c[2] ? c[2](r[c[0]], r) : esc(r[c[0]] ?? "—")}</td>`).join("") + "</tr>").join("");
+  return `<div class="row sp"><span class="meta">${rows.length} строк${opt.hint ? " · " + opt.hint : ""}</span><button class="btn" data-csv="${id}">CSV</button></div>
+  <div class="tw" ${opt.end !== false && /^rnp(all|ads|kw|cl)$/.test(id) ? 'data-end="1"' : ""} style="${opt.h ? "max-height:" + opt.h + "px" : ""}"><table data-t="${id}" data-click="${opt.click || ""}"><thead><tr>${h}</tr></thead><tbody>${b || `<tr><td colspan="${cols.length}" class="l meta">нет данных</td></tr>`}</tbody></table></div>`;
+}
+function bind(root) {
+  root.querySelectorAll("table[data-t] thead th").forEach(th => th.onclick = () => { const id = th.closest("table").dataset.t, k = th.dataset.k, s = st.sort[id]; st.sort[id] = { k, d: s && s.k === k ? -s.d : -1 }; render(); });
+  root.querySelectorAll("table[data-click] tbody tr.click").forEach(tr => tr.onclick = e => {
+    if (e.target.closest("a,button,select,input")) return;
+    const t = tr.closest("table").dataset.click, id = tr.dataset.id;
+    if (t === "sku" && tr.dataset.nm) go("sku", tr.dataset.nm);
+    else if (t === "camp") { st.camp = +id; st.tab = "ads"; st.asub = "camps"; save(); nav(); render(); }
+    else if (t === "pair") { st.pair = id; st.asub = "keys"; render(); }
+    else if (t === "aroma") { st.aroma = id; render(); }
+    else if (t === "line") { st.line = id; render(); }
+    else if (t === "gap") { st.gapnm = +id; st.tsub = "gaps"; render(); }
+    else if (t === "rnpnm" && tr.dataset.nm) { st.nm = +tr.dataset.nm; st.rsub = "nm"; save(); render(); window.scrollTo(0, 0); }
+    else if (t === "rcamp") { st.rcamp = id; render(); }
+    else if (t === "kq") { st.kq = id; render(); }
+    else if (t === "ncand") { st.ncand = id; render(); }
+  });
+  root.querySelectorAll("[data-csv]").forEach(b => b.onclick = () => csv(b.dataset.csv));
+  root.querySelectorAll("tr[data-row]").forEach(tr => tr.onclick = () => { st.rrow = tr.dataset.row; render(); });
+  root.querySelectorAll("tr[data-rowa]").forEach(tr => tr.onclick = () => { st.rrowa = tr.dataset.rowa; render(); });
+  root.querySelectorAll("[data-go]").forEach(a => a.onclick = e => { e.preventDefault(); e.stopPropagation(); go(a.dataset.tab || "sku", a.dataset.go); });
+  root.querySelectorAll("[data-set]").forEach(b => b.onclick = e => { e.preventDefault(); e.stopPropagation(); let tab = null;
+    b.dataset.set.split("&").forEach(pair => { const [k, v] = pair.split("="); if (k === "tab") tab = v; else st[k] = isNaN(v) || v === "" ? v : +v; });
+    if (tab) return go(tab); save(); render(); });
+  root.querySelectorAll("select[data-f]").forEach(s => s.onchange = () => { st.filters[s.dataset.f] = s.value; render(); });
+  root.querySelectorAll("select[data-st]").forEach(s => s.onchange = () => { const v = s.value; st[s.dataset.st] = isNaN(v) || v === "" ? v : +v; save(); render(); });
+}
+async function csv(id) {
+  const t = TBL[id]; if (!t) return;
+  const strip = v => String(v ?? "").replace(/<[^>]+>/g, "").replace(/ /g, " ");
+  const lines = [t.cols.map(c => strip(c[1])).join(";")].concat(t.rows.map(r => t.cols.map(c => { let v = r[c[0]]; if (v && typeof v === "object") v = v.last ?? v.pos ?? ""; return typeof v === "number" ? String(v).replace(".", ",") : `"${strip(v).replace(/"/g, '""')}"`; }).join(";")));
+  const data = "﻿" + lines.join("\n");
+  const dl = await cap("downloads");
+  if (dl) { try { await dl.save({ filename: `${id}.csv`, data }); } catch (e) {} }
+  else if (window.PULT_SITE) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/csv;charset=utf-8" })); a.download = `${id}.csv`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }
+  else { try { await navigator.clipboard.writeText(data); toast("Таблица скопирована в буфер — вставьте в Excel"); } catch (e) { toast("Экспорт недоступен в этом просмотре"); } }
+}
+function toast(m) { const d = document.createElement("div"); d.textContent = m; d.style.cssText = `position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:8px 12px;border-radius:8px;z-index:50`; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
+const seg = (key, opts) => `<span class="seg">${opts.map(([v, t]) => `<button data-set="${key}=${v}" aria-pressed="${String(st[key]) === String(v)}">${t}</button>`).join("")}</span>`;
+const periodSeg = () => seg("period", [["7", "7 дней"], ["30", "30 дней"], ["90", "90 дней"]]);
+
+/* ---------- графики ---------- */
+function line(id, labels, sets, opt = {}) {
+  after(() => {
+    const el = document.getElementById(id); if (!el || !window.Chart) return;
+    const grid = css("--line"), mut = css("--muted");
+    charts.push(new Chart(el, { type: opt.type || "line", data: { labels: labels.map(l => /^\d{4}-\d\d-\d\d$/.test(l) ? fmtD(l) : l), datasets: sets.map((s, i) => ({ label: s.l, data: s.d, borderColor: css(s.c || ["--c1", "--c2", "--c3", "--c4"][i % 4]), backgroundColor: css(s.c || ["--c1", "--c2", "--c3", "--c4"][i % 4]), yAxisID: s.y || "y", pointRadius: 0, borderWidth: s.w || 1.8, tension: .25, type: s.t || opt.type || "line", order: s.t === "bar" ? 2 : 1, stack: s.stack, spanGaps: true })) },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+        plugins: { legend: { labels: { color: mut, boxWidth: 10, font: { size: 11 } } }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${N(c.parsed.y, 1)}` } } },
+        scales: { x: { stacked: !!opt.stacked, ticks: { color: mut, maxTicksLimit: 12, font: { size: 10 } }, grid: { color: grid } }, y: { stacked: !!opt.stacked, ticks: { color: mut, font: { size: 10 } }, grid: { color: grid }, beginAtZero: opt.zero !== false, reverse: !!opt.rev },
+          ...(sets.some(s => s.y === "y2") ? { y2: { position: "right", ticks: { color: mut, font: { size: 10 } }, grid: { display: false }, beginAtZero: opt.zero2 !== false } } : {}) } } }));
+  });
+  return `<div class="chart" style="${opt.h ? "height:" + opt.h + "px" : ""}"><canvas id="${id}"></canvas></div>`;
+}
+const ser = (nm, k) => D.series?.[nm]?.[k] || [];
+const roll = (a, n = 7) => a.map((_, i) => { const s = a.slice(Math.max(0, i - n + 1), i + 1).filter(v => v != null); return s.length ? s.reduce((x, y) => x + y, 0) / s.length : null; });
+const ratio = (a, b) => a.map((x, i) => b[i] && x != null ? x / b[i] * 100 : null);
+const mon = d => { const [y, m, dd] = d.split("-").map(Number); const t = Date.UTC(y, m - 1, dd); const wd = (new Date(t).getUTCDay() + 6) % 7; return new Date(t - wd * 864e5).toISOString().slice(0, 10); };
+function weekly(get) {
+  const dates = D.meta.dates, W = {};
+  dates.forEach((d, i) => { const w = mon(d); const r = W[w] = W[w] || { w, days: 0, opens: 0, opensN: 0, cart: 0, orders: 0, sum: 0, ad: 0, ado: 0, pw: 0, pn: 0, spp: 0 }; r.days++;
+    const o = get("opens")[i]; if (o != null) { r.opens += o; r.opensN++; } r.cart += get("cart")[i] || 0; r.orders += get("orders")[i] || 0; r.sum += get("sum")[i] || 0;
+    r.ad += get("ad_sum")[i] || 0; r.ado += get("ad_orders")[i] || 0; const pr = (get("price") || [])[i], q = get("orders")[i] || 0; if (pr) { r.pw += pr * q; r.pn += q; r.spp += ((get("spp") || [])[i] || 0) * q; } });
+  return Object.values(W).map(r => ({ ...r, wl: fmtD(r.w) + (r.days < 7 ? ` (${r.days} дн)` : ""), crc: r.opens ? r.cart / r.opens * 100 : null, cro: r.cart ? r.orders / r.cart * 100 : null, price: r.pn ? r.pw / r.pn : null, sppw: r.pn ? r.spp / r.pn : null, drr: r.sum ? r.ad / r.sum * 100 : null }));
+}
+const weekCols = [["wl", "Неделя с", null, "l"], ["opens", "Переходы", N], ["cart", "Корзины", N], ["crc", "CR корз.", pct], ["orders", "Заказы", N], ["cro", "CR заказ", pct], ["sum", "Сумма, ₽", money], ["price", "Цена продавца", money], ["sppw", "СПП", pct], ["ad", "Реклама, ₽", money], ["ado", "Рекл. заказы", N], ["drr", "ДРР", pct]];
+
+/* ---------- хелперы данных ---------- */
+const per = s => { const x = PA(s.nm); return [x.a, x.b]; };
+function skuRows() {
+  return (D.sku || []).map(s => { const [a, b] = per(s), p = s.pnl30 || {};
+    return { nm: s.nm, vc: s.vc, aroma: s.aroma || "—", glue: s.glue || "—", abc: s.abc || "—", orders: a.orders, dord: Pd(a, b, "orders"), sum: a.sum, opens: a.opens, dop: Pd(a, b, "opens"),
+      crc: a.opens ? a.cart / a.opens * 100 : null, cro: a.cart ? a.orders / a.cart * 100 : null, price: a.price, bprice: a.bprice, spp: a.spp, ads: a.ad_sum, drr: a.sum ? a.ad_sum / a.sum * 100 : null,
+      cpo: a.ad_orders ? a.ad_sum / a.ad_orders : null, qty: p.qty, rev1: p.rev1, wb1: p.wbp ?? p.wb1, log1: p.log1, cogs1: p.cogs1, ads1: p.ads1, ind1: p.ind1, tax1: p.tax1, net1: p.net1, net: p.net, margin: p.margin, pre1: p.pre1 }; });
+}
+const VERD = { waste: ["Без заказов", "bad"], tail: ["Хвост без заказов", "warn"], foreign: ["Чужой аромат", "bad"], expensive: ["Заказ дороже прибыли", "warn"], scale: ["Можно поднять ставку", "good"], deep: ["Глубокая позиция", "mute"], ok: ["Норма", "acc"] };
+const GAPC = { absent: ["Вас нет в выдаче", "bad"], rival_paid: ["Конкурент покупает", "warn"], rival_organic: ["Конкурент выше органикой", "warn"], overpay: ["Платите при сильной органике", "acc"], lead: ["Вы впереди", "good"], ok: ["Рядом", "mute"] };
+const TR = [["org_search", "Органический поиск", "--c5"], ["paid_search", "Платный поиск", "--c3"], ["article", "Поиск по артикулу", "--c1"], ["paid_rec", "Полки (реклама в рекомендациях)", "--c2"], ["other", "Каталог, рекомендации, внешний, прочее", "--c4"]];
+const stack = sh => `<div class="stack">${TR.map(([k, , c]) => `<i style="width:${sh[k] || 0}%;background:var(${c})" title="${k}: ${N(sh[k], 1)}%"></i>`).join("")}</div>`;
+const legend = () => `<div class="legend">${TR.map(([, t, c]) => `<span style="--sw:var(${c})">${t}</span>`).join("")}</div>`;
+const recHtml = r => `<div class="rec">${pill(r.kind, r.sev)}<div>${r.nm ? `<a class="lnk" data-go="${r.nm}">${esc(r.vc)}</a> · ` : "<b>Кабинет</b> · "}${esc(r.title)}</div><div class="ev">${esc(r.ev)}</div><div class="act">→ ${esc(r.act)}</div></div>`;
+const median = a => { const s = a.filter(v => v != null && !isNaN(v)).sort((x, y) => x - y); return s.length ? (s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2) : null; };
+const K30 = 30 / 35;
+
+/* ================= ВИДЫ ================= */
+const VIEWS = {};
+const skuNeed = () => need(["rnp"]);
+
+/* ---------- ОБЗОР ---------- */
+VIEWS.overview = () => {
+  const t = D.total?.daily || {}; const dates = D.meta?.dates || []; const n = dates.length;
+  const agg = (p, k) => (D.sku || []).reduce((a, s) => a + ((s[p] || {})[k] || 0), 0);
+  const kp = (l, k, p7) => { const pp = p7 ? ["p7", "p7b"] : ["p30", "p30b"]; const a = agg(pp[0], k), b = agg(pp[1], k); const dd = P(a, b); return `<div class="kpi"><span class="l">${l}</span><span class="v">${N(a)}</span>${k === "ad_sum" ? (dd == null ? "" : `<span class="d meta">${dd > 0 ? "+" : ""}${N(dd, 1)}%</span>`) : dlt(dd)}</div>`; };
+  const R = (D.recs || []).filter(r => r.sev === "high").slice(0, 10);
+  const pw = (D.total?.pnlw || []).map(w => ({ ...w, w1: w.qty ? w.net / w.qty : null, m: w.rev ? w.net / w.rev * 100 : null, wl: fmtD(w.w) + "–" + fmtD(w.to) }));
+  const movers = (D.sku || []).map(s => { const x = PA(s.nm), k = x.b.days ? x.a.days / x.b.days : 1, b = x.b.orders * k; return { nm: s.nm, vc: s.vc, abc: s.abc || "—", o7: x.a.orders, o7b: Math.round(b), d7: Math.round(x.a.orders - b), dp: b ? (x.a.orders / b - 1) * 100 : null }; }).filter(r => r.o7b >= Math.max(5, RG().len * 3)).sort((a, b) => a.d7 - b.d7);
+  const own = Object.values(D.traffic?.own || {}); const tp = {}; TR.forEach(([k]) => tp[k] = own.reduce((a, x) => a + (x.parts[k] || 0), 0)); const tt = Object.values(tp).reduce((a, b) => a + b, 0) || 1; const tsh = {}; TR.forEach(([k]) => tsh[k] = tp[k] / tt * 100);
+  const cs = D.clusters?.sum || []; const csp = cs.reduce((a, x) => a + x.spend, 0), cw = cs.reduce((a, x) => a + x.waste, 0);
+  const ux = D.unitx?.sum || {}; const L = rgLab();
+  return `<h1>Обзор кабинета</h1>${pulseCard()}
+  <div class="card"><div class="row sp"><h2>Выбранный период: ${L.cur} к ${L.prv}</h2><span class="meta">период и сравнение меняются вверху страницы</span></div><div class="kpis">${pkHtml(D.order)}</div></div>
+  <div class="kpis">
+  <div class="kpi"><span class="l">СПП / цена покупателя сейчас</span><span class="v">${N(t.spp?.[n - 1], 1)}% · ${N(t.bprice?.[n - 1])} ₽</span><span class="meta">месяц назад: ${N(t.spp?.[n - 31], 1)}% · ${N(t.bprice?.[n - 31])} ₽</span></div>
+  <div class="kpi"><span class="l">Прибыль/шт: факт · модель таблицы</span><span class="v">${N(ux.net_o)} · ${N(ux.net_t)} ₽</span><a class="lnk meta" data-set="usub=recon&tab=unit">почему отличаются →</a></div></div>
+  <div class="grid">
+    <div class="card"><h2>Заказы и переходы по дням (${n} дней)</h2>${line("ch1", dates, [{ l: "Заказы", d: t.orders }, { l: "Заказы, ср. 7д", d: roll(t.orders || []), c: "--c4", w: 2.5 }, { l: "Переходы, тыс", d: (t.opens || []).map(x => x == null ? null : x / 1000), y: "y2", c: "--c3" }])}</div>
+    <div class="card"><h2>СПП, цена покупателя и реклама</h2>${line("ch2", dates, [{ l: "СПП, %", d: t.spp }, { l: "Цена покупателя, ₽", d: t.bprice, y: "y2", c: "--c2" }, { l: "Реклама, тыс ₽", d: (t.ad_sum || []).map(x => x / 1000), c: "--c3", t: "bar" }], { zero2: false })}</div>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="row sp"><h2>Откуда переходы в карточки (30д)</h2><a class="lnk" data-set="tsub=own&tab=traffic">Трафик →</a></div>${stack(tsh)}${legend()}
+      <p class="note">${TR.map(([k, l]) => `${l}: <b>${N(tsh[k], 1)}%</b>`).join(" · ")}. Полки — ваш главный источник переходов; органический поиск почти не работает.</p></div>
+    <div class="card"><div class="row sp"><h2>Реклама в поиске: деньги без заказов</h2><a class="lnk" data-set="asub=keys&tab=ads">Ключи →</a></div>
+      <div class="kpis"><div class="kpi"><span class="l">Расход на поисковые кластеры, 30д</span><span class="v">${N(csp)} ₽</span></div><div class="kpi"><span class="l">Без заказов / чужой аромат</span><span class="v dn">${N(cw)} ₽</span><span class="meta">${N(csp ? cw / csp * 100 : 0, 1)}% расхода</span></div></div></div>
+  </div>
+  <div class="card"><h2>P&amp;L по неделям отчёта реализации</h2><p class="note">${esc(D.meta?.model?.note || "")}</p>
+  ${T("pnlw", [["wl", "Неделя", null, "l"], ["qty", "Продажи, шт", money], ["rev", "Выручка, ₽", money], ["ads", "Реклама, ₽", money], ["pen", "Штрафы, ₽", money], ["net", "Чистая прибыль, ₽", netCls], ["w1", "Прибыль / шт", netCls], ["m", "Маржа, %", pct]], pw)}</div>
+  <div class="grid">
+    <div class="card"><h2>Главное к действию</h2>${R.map(recHtml).join("") || '<p class="meta">Срочного нет</p>'}<a class="lnk" data-set="tab=recs" style="font-size:12.5px">Все рекомендации →</a></div>
+    <div class="card"><h2>Сильнее всего просели: ${rgLab().cur} к ${rgLab().prv}</h2>${T("movers", [["vc", "Артикул", vcLink, "l"], ["o7b", "Заказы, пред.", N], ["o7", "Заказы", N], ["d7", "Δ, шт", v => dlt(v, false, "")], ["dp", "Δ, %", v => dlt(v)], ["abc", "ABC", abcPill]], movers.slice(0, 12), { click: "sku", h: 380 })}</div>
+  </div>
+  <div class="card"><div class="row sp"><h2>Последние заметки команды</h2><span class="meta">пишутся на странице артикула</span></div><div id="teamNotes" class="notes"><p class="meta">Загружаю…</p></div></div>`;
+};
+
+/* ---------- ЮНИТКА ---------- */
+const LINES = [
+  { k: "price", t: "Цена продавца", g: p => p.price, dir: "high", act: "Цена ниже типичной: проверьте в симуляторе, что даст +5% к цене при вашей марже." },
+  { k: "wbp", t: "Удержания WB (цена продавца − к перечислению)", g: p => p.wbp ?? (p.price != null && p.rev1 != null && p.wb1 != null ? p.price - (p.rev1 - p.wb1) : null), dir: "low", act: "Выше среднего обычно из-за акций со скидкой за счёт продавца или высокой доли возвратов. Сверьте отчёт реализации по артикулу." },
+  { k: "log1", t: "Логистика и обработка", g: p => p.log1, dir: "low", act: "Растёт от невыкупов (обратная логистика) и отмен. Проверьте отзывы о браке/пересорте и время сборки FBS." },
+  { k: "cogs1", t: "Себестоимость", g: p => p.cogs1, dir: "low", act: "Сравните с объёмом/рецептурой; при снижении — следите за стойкостью в отзывах (масло 03.08)." },
+  { k: "ads1", t: "Реклама на продажу", g: p => p.ads1, dir: "low", act: "Откройте ключи кампаний артикула: минус-фразы для кластеров без заказов, перенос бюджета в полки/CPC с лучшим CPO." },
+  { k: "ind1", t: "Косвенные 10% от цены", g: p => p.ind1, dir: "low", fixed: 1, act: "Ставка задана моделью (10% от цены продавца)." },
+  { k: "tax1", t: "УСН 6% + НДС 5%", g: p => p.tax1, dir: "low", fixed: 1, act: "Налоги считаются от фактической цены продажи." },
+  { k: "pen1", t: "Штрафы и хранение", g: p => p.qty ? (p.pen || 0) / p.qty : 0, dir: "low", act: "Штрафы за просрочку передачи FBS и подмену товара — смотрите вкладку «Склады» и время сборки." },
+  { k: "net1", t: "Чистая прибыль на продажу", g: p => p.net1, dir: "high", act: "Сумма всех статей выше." }];
+function lineStats() {
+  const S = (D.sku || []).filter(s => s.pnl30 && s.pnl30.qty >= 20);
+  return LINES.map(L => { const vals = S.map(s => ({ s, v: L.g(s.pnl30), q: s.pnl30.qty })).filter(x => x.v != null);
+    const w = vals.reduce((a, x) => a + x.q, 0) || 1; const avg = vals.reduce((a, x) => a + x.v * x.q, 0) / w; const med = median(vals.filter(x => L.k !== "ads1" || x.v > 0).map(x => x.v));
+    const pot = vals.reduce((a, x) => a + Math.max(L.dir === "low" ? x.v - med : med - x.v, 0) * x.q * K30, 0);
+    return { id: L.k, t: L.t, avg, med, min: Math.min(...vals.map(x => x.v)), max: Math.max(...vals.map(x => x.v)), total: vals.reduce((a, x) => a + x.v * x.q, 0) * K30, pot: L.fixed || L.k === "net1" ? null : pot, vals, L }; });
+}
+VIEWS.unit = () => {
+  const subs = seg("usub", [["table", "Таблица"], ["lines", "По статьям"], ["recon", "Сверка с таблицей менеджеров"], ["sim", "Симулятор"]]);
+  return `<div class="row sp"><h1>Юнит-экономика</h1>${subs}</div>` + (UNIT[st.usub] || UNIT.table)();
+};
+const UNIT = {};
+UNIT.table = () => {
+  let rows = skuRows(); const f = st.filters;
+  if (f.abc) rows = rows.filter(r => r.abc === f.abc); if (f.glue) rows = rows.filter(r => String(r.glue) === f.glue); if (f.aroma) rows = rows.filter(r => r.aroma === f.aroma);
+  if (!st.sort.unit) rows.sort((a, b) => (b.net || -1e9) - (a.net || -1e9));
+  const tot = k => rows.reduce((a, r) => a + (r[k] || 0), 0);
+  const opts = (k, vals, t) => `<select data-f="${k}"><option value="">${t}</option>${vals.map(v => `<option ${f[k] == v ? "selected" : ""}>${esc(v)}</option>`).join("")}</select>`;
+  const uniq = k => [...new Set(skuRows().map(r => r[k]).filter(v => v && v !== "—"))].sort((a, b) => String(a).localeCompare(String(b), "ru", { numeric: true }));
+  return `<div class="row">${opts("abc", ["A", "B", "C"], "ABC: все")}${opts("glue", uniq("glue"), "Склейка: все")}${opts("aroma", uniq("aroma"), "Аромат: все")}<span class="meta">Период: ${rgLab().cur} к ${rgLab().prv}</span></div>
+  <div class="kpis"><div class="kpi"><span class="l">Чистая прибыль ≈30д</span><span class="v">${N(tot("net"))} ₽</span></div><div class="kpi"><span class="l">Продажи ≈30д</span><span class="v">${N(tot("qty"))}</span></div>
+  <div class="kpi"><span class="l">Прибыль на продажу</span><span class="v">${N(tot("net") / (tot("qty") || 1))} ₽</span></div><div class="kpi"><span class="l">Заказы за период</span><span class="v">${N(tot("orders"))}</span></div><div class="kpi"><span class="l">Реклама за период</span><span class="v">${N(tot("ads"))} ₽</span></div></div>
+  <p class="note">Воронка и реклама — за выбранный период с изменением к предыдущему. Юнитка на 1 шт — отчёты реализации за ~30 дней. Клик по строке — разбор артикула; по статьям — вкладка «По статьям».</p>
+  ${T("unit", [["vc", "Артикул", vcLink, "l"], ["abc", "ABC", abcPill], ["aroma", "Аромат", null, "l"], ["glue", "Скл."], ["orders", "Заказы", N], ["dord", "Δ заказов", v => dlt(v)], ["sum", "Сумма, ₽", money],
+    ["opens", "Переходы", N], ["dop", "Δ переходов", v => dlt(v)], ["crc", "CR корз.", pct], ["cro", "CR заказ", pct], ["price", "Цена продавца", money], ["bprice", "Цена покуп.", money], ["spp", "СПП", pct],
+    ["ads", "Реклама, ₽", money], ["drr", "ДРР", pct], ["cpo", "CPO", money], ["qty", "Продажи ~30д", N], ["rev1", "Цена покуп./шт", money], ["wb1", "WB удержал/шт", money, "", "Цена продавца − к перечислению"], ["log1", "Логист./шт", money],
+    ["cogs1", "Себест.", money], ["ads1", "Рекл./шт", money], ["ind1", "Косв./шт", money], ["tax1", "Налоги/шт", money], ["pre1", "Приб. до рекл./шт", netCls], ["net1", "Прибыль/шт", netCls], ["net", "Прибыль, ₽", netCls], ["margin", "Маржа", pct]], rows, { click: "sku", h: 640 })}`;
+};
+UNIT.lines = () => {
+  const LS = lineStats(); const sel = LS.find(x => x.id === st.line) || LS[4];
+  const noteAds = sel.id === "ads1" ? " Медиана — по карточкам, у которых есть реклама." : "";
+  const det = sel.vals.map(x => ({ nm: x.s.nm, vc: x.s.vc, abc: x.s.abc || "—", qty: x.q, v: x.v, dmed: x.v - sel.med, ex: Math.max(sel.L.dir === "low" ? x.v - sel.med : sel.med - x.v, 0) * x.q * K30, net1: x.s.pnl30.net1 }));
+  if (!st.sort.ldet) det.sort((a, b) => b.ex - a.ex);
+  return `<p class="note">Каждая статья на 1 продажу по карточкам с 20+ продажами за ~30 дней. «Потенциал» — сколько ₽ в месяц вернётся, если карточки хуже медианы подтянуть до медианы. Клик по статье — карточки, которые дают перерасход.</p>
+  ${T("lines", [["t", "Статья", null, "l"], ["avg", "Средняя ₽/шт (взвеш.)", v => N(v)], ["med", "Медиана", v => N(v)], ["min", "Мин", v => N(v)], ["max", "Макс", v => N(v)], ["total", "Всего ₽/мес", money], ["pot", "Потенциал ₽/мес", v => v == null ? "—" : `<b class="up">${N(v)}</b>`]], LS, { click: "line", sel: r => r.id === sel.id })}
+  <div class="card"><h2>${esc(sel.t)}: где хуже медианы (${N(sel.med)} ₽/шт)</h2><div class="callout">${esc(sel.L.act)}${noteAds}</div>
+  ${T("ldet", [["vc", "Артикул", vcLink, "l"], ["abc", "ABC", abcPill], ["qty", "Продажи ~30д", N], ["v", "₽/шт", v => N(v)], ["dmed", "к медиане", v => dlt(v, sel.L.dir === "low", " ₽")], ["ex", sel.L.dir === "low" ? "Перерасход ₽/мес" : "Недобор ₽/мес", v => v > 0 ? `<b>${N(v)}</b>` : "—"], ["net1", "Прибыль/шт", netCls]], det, { click: "sku", h: 460 })}</div>`;
+};
+UNIT.recon = () => {
+  const U = D.unitx; if (!U || !U.rows?.length) return `<div class="card">Нет данных таблицы менеджеров. Положите «Аналитика продаж*.xlsx» в Загрузки и скажите «обнови пульт».</div>`;
+  const s = U.sum;
+  const L = [["Цена продавца", "price_t", "price_o", "В таблице — текущая цена на неделю листа; в факте — средняя цена фактических продаж за 30 дней (цена менялась)."],
+    ["СПП, %", "spp_t", "spp_o", "Таблица берёт СПП на дату заполнения; факт — средняя СПП по заказам за 30 дней."],
+    ["Цена покупателя", "bp_t", "bp_o", "Цена × (1 − СПП)."],
+    ["Удержания WB", "wb_t", "wb_o", `Таблица: фикс. ${N((U.rates.comm || 0) * 100, 1)}% комиссия + ${N((U.rates.acq || 0) * 100, 1)}% эквайринг + ${N((U.rates.other || 0) * 100, 1)}% прочие от цены. Факт: цена продавца − «к перечислению» из отчёта реализации.`],
+    ["Логистика", "log_t", "log_o", "Таблица: фикс. 60 + 8 ₽. Факт: доставка + обратная логистика невыкупов + обработка на продажу — по карточкам от ~55 до 90+ ₽."],
+    ["Реклама", "ads_t", "ads_o", "Таблица: СРО (расход/выкуп) из ручной выгрузки «Данные СРО». Факт: фактический расход кампаний за 30 дней / продажи."],
+    ["Себестоимость", "cost_t", "cost_o", "Таблица: колонка V тянется с предыдущего недельного листа по цепочке. Факт: файл «Себестоимость 20.10»."],
+    ["Косвенные 10%", "ind_t", "ind_o", "Одна ставка; разница только из-за цены."],
+    ["УСН + НДС", "tax_t", "tax_o", "Таблица: от цены с СПП из листа. Факт: от фактической цены продаж."],
+    ["Штрафы и хранение", null, "pen_o", "В таблице не учитываются; в факте — из отчёта реализации."],
+    ["Чистая прибыль на шт", "net_t", "net_o", "Итог."]].map(([t, a, b, why]) => ({ t, th: a ? s[a] : null, fa: s[b], d: (s[b] ?? 0) - (a ? s[a] ?? 0 : 0), why }));
+  const rows = U.rows.map(r => ({ ...r, dnet: (r.net_o ?? 0) - (r.net_t ?? 0) }));
+  return `<div class="callout">Ваша таблица и факт почти совпадают <b>в среднем</b> по удержаниям WB, логистике и рекламе — модель менеджеров в целом верная. Расхождения по прибыли идут от <b>цены</b> (лист — на сегодня, факт — средняя за 30 дней), <b>логистики и рекламы по отдельным карточкам</b> (в таблице одна цифра на всех) и <b>штрафов</b>. Источник: «${esc(U.file)}», лист «${esc(U.sheet)}».</div>
+  ${T("rsum", [["t", "Статья (средняя на 1 шт, взвеш. по продажам)", null, "l"], ["th", "Таблица", v => N(v, 1)], ["fa", "Факт", v => N(v, 1)], ["d", "Факт − таблица", v => dlt(v, false, " ₽")], ["why", "Почему отличается", v => esc(v), "l wrap"]], L)}
+  <div class="card"><h2>По артикулам</h2><p class="note">Знак разницы: «+» — по факту статья больше, чем в таблице. «Главное расхождение» — статья с самой большой разницей.</p>
+  ${T("rrows", [["vc", "Артикул", vcLink, "l"], ["qty", "Продажи ~30д", N], ["price_t", "Цена табл.", money], ["price_o", "Цена факт", money], ["wb_t", "WB табл.", money], ["wb_o", "WB факт", money], ["log_t", "Логист. табл.", money], ["log_o", "Логист. факт", money],
+    ["ads_t", "Рекл. табл.", money], ["ads_o", "Рекл. факт", money], ["cost_t", "Себест. табл.", v => N(v, 1)], ["cost_file", "Себест. файл", v => N(v, 1)], ["pen_o", "Штрафы факт", money], ["net_t", "Прибыль табл.", netCls], ["net_o", "Прибыль факт", netCls], ["dnet", "Разница", v => dlt(v, false, " ₽")], ["main", "Главное расхождение", null, "l"]], rows, { click: "sku", h: 520 })}</div>
+  <div class="card"><h2>Ошибки в формулах таблицы</h2>${(U.issues || []).map(i => `<div class="rec">${pill(i.kind === "#REF!" ? "#REF!" : "Чужой лист", i.kind === "#REF!" ? "bad" : "warn")}<div>Колонка <b>${esc(i.col)}</b>: <span class="mono">${esc(i.formula)}</span></div><div class="ev">${i.col === "V" ? "Себестоимость берётся с предыдущего недельного листа — обновления листа «Себестоимость» сюда не попадают." : i.kind === "#REF!" ? "Ссылка на удалённый лист — колонка сравнения с прошлой неделей всегда пустая." : "«Прошлый период» берётся с листа конца июля, а не с прошлой недели — динамика считается неверно; диапазон без $ съезжает по строкам."}</div></div>`).join("")}</div>`;
+};
+UNIT.sim = () => {
+  const list = D.order.slice(0, 80).filter(nm => D.byNm[nm]?.pnl30?.qty);
+  if (!st.simnm || !list.includes(st.simnm)) st.simnm = list.includes(st.nm) ? st.nm : list[0];
+  const s = D.byNm[st.simnm], p = s.pnl30; const k = p.price ? (p.price - (p.rev1 - p.wb1)) / p.price : 0.45; const spp = s.p30.spp ?? 30;
+  after(() => { document.querySelectorAll(".sim input").forEach(i => i.oninput = simCalc); simCalc(); });
+  const inp = (id, l, v, step = 1) => `<label>${l}<input class="inp n" id="${id}" type="number" step="${step}" value="${v}"></label>`;
+  return `<div class="row"><select data-st="simnm">${list.map(nm => `<option value="${nm}" ${nm === st.simnm ? "selected" : ""}>${esc(D.byNm[nm].vc)}</option>`).join("")}</select><span class="meta">Значения по умолчанию — факт за ~30 дней. Меняйте цифры — пересчёт сразу.</span></div>
+  <div class="card"><div class="sim">${inp("s_price", "Цена продавца, ₽", p.price)}${inp("s_spp", "СПП, %", spp, 0.5)}${inp("s_k", "Удержания WB, % от цены", (k * 100).toFixed(1), 0.1)}${inp("s_log", "Логистика ₽/шт", p.log1)}
+  ${inp("s_cost", "Себестоимость ₽/шт", p.cogs1 ?? 0, 0.1)}${inp("s_ads", "Реклама ₽/шт", p.ads1 ?? 0)}${inp("s_pen", "Штрафы ₽/шт", Math.round((p.pen || 0) / (p.qty || 1)))}${inp("s_ind", "Косвенные, % от цены", 10, 0.5)}
+  ${inp("s_tax", "УСН, %", 6, 0.5)}${inp("s_nds", "НДС, %", 5, 0.5)}${inp("s_qty", "Продаж в месяц сейчас", Math.round(p.qty * K30))}${inp("s_el", "Эластичность (−% заказов на +1% цены покупателя)", 2, 0.1)}</div></div>
+  <div class="grid"><div class="card" id="simOut"></div><div class="card"><h2>Что считается</h2><p class="note">Цена покупателя = цена × (1 − СПП). К перечислению = цена × (1 − удержания WB). Прибыль/шт = к перечислению − логистика − себестоимость − реклама − штрафы − косвенные (% от цены) − УСН и НДС (от цены покупателя). Объём меняется по эластичности от изменения цены покупателя относительно факта. Эластичность ≈2 оценена по кабинету: за 3 недели СПП упала на 7,7 п.п., цена покупателя выросла на 8,6%, заказы −32% (часть — из-за урезанной рекламы).</p></div></div>`;
+};
+function simCalc() {
+  const v = id => +($("#" + id)?.value || 0); const s = D.byNm[st.simnm], p = s.pnl30;
+  const price = v("s_price"), spp = v("s_spp") / 100, k = v("s_k") / 100, bp = price * (1 - spp);
+  const pay = price * (1 - k), ind = price * v("s_ind") / 100, tax = bp * v("s_tax") / 100 + bp * v("s_nds") / (100 + v("s_nds"));
+  const net = pay - v("s_log") - v("s_cost") - v("s_ads") - v("s_pen") - ind - tax;
+  const bp0 = p.rev1 || bp; const dq = -(bp / bp0 - 1) * 100 * v("s_el"); const qty = v("s_qty") * (1 + dq / 100);
+  const net0 = p.net1, qty0 = v("s_qty");
+  $("#simOut").innerHTML = `<h2>Результат</h2><div class="kpis">
+    <div class="kpi"><span class="l">Цена покупателя</span><span class="v">${N(bp)} ₽</span>${dlt(P(bp, bp0))}</div>
+    <div class="kpi"><span class="l">К перечислению</span><span class="v">${N(pay)} ₽</span></div>
+    <div class="kpi"><span class="l">Прибыль на шт</span><span class="v ${net < 0 ? "dn" : ""}">${N(net)} ₽</span><span class="meta">факт: ${N(net0)} ₽</span></div>
+    <div class="kpi"><span class="l">Продаж в месяц</span><span class="v">${N(qty)}</span>${dlt(dq)}</div>
+    <div class="kpi"><span class="l">Прибыль в месяц</span><span class="v ${net < 0 ? "dn" : ""}">${N(net * qty)} ₽</span><span class="meta">сейчас ≈ ${N(net0 * qty0)} ₽</span></div>
+    <div class="kpi"><span class="l">Изменение прибыли</span><span class="v">${dlt(net * qty - net0 * qty0, false, " ₽")}</span></div></div>`;
+}
+
+/* ---------- АРТИКУЛ ---------- */
+VIEWS.sku = () => {
+  skuNeed(); const s = D.byNm[st.nm]; if (!s) return `<div class="empty">Выберите артикул в поиске сверху</div>`;
+  const dates = D.meta.dates; const nm = s.nm; const [a, b] = per(s);
+  const op = ser(nm, "opens"), ca = ser(nm, "cart"), or = ser(nm, "orders");
+  const k = (l, v, d, f = N, inv) => `<div class="kpi"><span class="l">${l}</span><span class="v">${f(v)}</span>${d != null ? dlt(d, inv) : ""}</div>`;
+  const dec = decomp(a, b); const L = rgLab();
+  const decHtml = dec ? (() => { const mx = Math.max(1, ...Object.values(dec).map(Math.abs)); const LB = { opens: "Трафик (переходы)", cr_cart: "Конверсия в корзину", cr_order: "Конверсия в заказ" };
+    return `<div class="bars">${Object.entries(dec).map(([kk, v]) => `<div class="bar"><span>${LB[kk]}</span><span class="t"><i style="left:${v < 0 ? 50 - Math.abs(v) / mx * 50 : 50}%;width:${Math.abs(v) / mx * 50}%;background:var(${v < 0 ? "--bad" : "--good"})"></i></span><span class="d ${v < 0 ? "dn" : "up"}">${v > 0 ? "+" : ""}${N(v)} шт</span></div>`).join("")}</div>`; })() : `<p class="meta">Мало данных для разложения</p>`;
+  const ctx = [["СПП", b.spp, a.spp, "п.п.", true], ["Цена покупателя", b.bprice, a.bprice, "₽", true], ["Цена продавца", b.price, a.price, "₽", true], ["Реклама", b.ad_sum, a.ad_sum, "₽"], ["Рекламные заказы", b.ad_orders, a.ad_orders, "шт"]];
+  const camps = (D.ads || []).filter(c => c.nms.includes(nm));
+  const span = RG().len <= 10 ? "7" : "30"; const sq = (D.search?.items?.[nm]?.[span]) || [];
+  const recs = (D.recs || []).filter(r => r.nm === nm);
+  const pw = Object.entries(s.pnlw || {}).filter(([w, p]) => p.qty).map(([w, p]) => ({ w: fmtD(w), wk: w, ...p }));
+  const th = (D.unitx?.hist || {})[nm] || []; const thBy = {}; th.forEach(h => thBy[h.w] = h);
+  const mk = D.market?.aromas?.[s.aroma]; const idx = D.order.indexOf(nm);
+  const tr = D.traffic?.own?.[nm]; const gp = D.traffic?.gaps?.[nm];
+  const keys = (D.clusters?.sum || []).filter(x => x.nm === nm); const krows = keys.flatMap(x => (D.clusters.rows[`${x.aid}|${x.nm}`] || []).map(r => ({ ...r, camp: x.name, id: `${x.aid}|${x.nm}` }))).sort((x, y) => y.spend - x.spend);
+  const LS = lineStats(); const wf = LS.filter(x => x.id !== "price").map(x => ({ ...x, mine: x.L.g(s.pnl30 || {}) }));
+  const ux = (D.unitx?.rows || []).find(r => r.nm === nm);
+  const wk = weekly(key => ser(nm, key));
+  return `<div class="row sp"><div><h1>${esc(s.vc)} <span class="meta mono">${nm}</span></h1><div class="meta">${esc(s.title)} · аромат: ${esc(s.aroma || "—")} · склейка №${s.glue || "—"} · ABC ${abcPill(s.abc)} · рейтинг ${N(s.rating, 1)} · себестоимость ${N(s.cost, 2)} ₽ · описание ${s.desc_len} зн. · фото ${s.photos}${s.video ? " · видео" : ""} · остаток WB ${N(s.stocks?.wb)} / свой ${N(s.stocks?.mp)}</div></div>
+  <div class="row"><button class="btn" data-go="${D.order[idx - 1] || nm}">← пред.</button><button class="btn" data-go="${D.order[idx + 1] || nm}">след. →</button><button class="btn pri" data-set="rsub=nm&tab=rnp">РНП по дням</button><button class="btn" data-set="rsub=keys&tab=rnp">Ключи по дням</button><a class="btn" href="https://www.wildberries.ru/catalog/${nm}/detail.aspx" target="_blank" rel="noopener">на WB ↗</a></div></div>
+  <p class="meta">Период ${L.cur} к ${L.prv}</p>
+  <div class="kpis">${k("Заказы", a.orders, Pd(a, b, "orders"))}${k("Сумма, ₽", a.sum, Pd(a, b, "sum"))}${k("Переходы", a.opens, Pd(a, b, "opens"))}${k("CR в корзину", a.opens ? a.cart / a.opens * 100 : null, a.opens && b.opens ? (a.cart / a.opens - b.cart / b.opens) * 100 : null, pct)}
+  ${k("CR в заказ", a.cart ? a.orders / a.cart * 100 : null, a.cart && b.cart ? (a.orders / a.cart - b.orders / b.cart) * 100 : null, pct)}${k("Реклама, ₽", a.ad_sum, Pd(a, b, "ad_sum"), N, true)}${D.rnp ? (() => { const X = base([nm]), c = curB(), q = prvB(), v1 = mvs(RMI.prof, X, c), v0 = mvs(RMI.prof, X, q); return k("Прибыль за период (оценка), ₽", v1, relChg(RMI.prof, v1, v0, c, q)); })() : ""}${k("Прибыль/шт (отчёт 30д)", s.pnl30?.net1)}${k("Прибыль ~30д, ₽", s.pnl30?.net)}</div>
+  <div class="grid">
+    <div class="card"><h2>Почему изменились заказы: ${L.cur} к ${L.prv}</h2>${decHtml}
+      <table><thead><tr><th class="l">Контекст</th><th>было</th><th>стало</th><th>Δ</th></tr></thead><tbody>${ctx.map(([l, x, y, u, inv]) => `<tr><td class="l">${l}</td><td>${N(x, u === "п.п." ? 1 : 0)}</td><td>${N(y, u === "п.п." ? 1 : 0)}</td><td>${x != null && y != null ? dlt(y - x, inv, " " + u) : "—"}</td></tr>`).join("")}</tbody></table></div>
+    <div class="card"><h2>Рекомендации по артикулу</h2>${recs.map(recHtml).join("") || '<p class="meta">Нет</p>'}</div>
+  </div>
+  ${tr ? `<div class="card"><div class="row sp"><h2>Откуда переходы (30д): ${N(tr.opens)}</h2><a class="lnk" data-set="tsub=own&tab=traffic">все карточки →</a></div>${stack(tr.shares)}${legend()}
+    <p class="note">${TR.map(([kk, l]) => `${l}: <b>${N(tr.parts[kk])}</b> (${N(tr.shares[kk], 1)}%)`).join(" · ")}. Позиция в поиске ${N(tr.search_pos)} ${dlt(tr.search_dpos, true, "")}, видимость ${N(tr.search_vis)}%. CR из поиска ${N(tr.cr_search, 2)}% против ${N(tr.cr_all, 2)}% в среднем.</p></div>` : ""}
+  <div class="grid">
+    <div class="card"><h2>Воронка по дням</h2>${line("s1", dates, [{ l: "Заказы", d: or }, { l: "Корзины", d: ca, c: "--c2" }, { l: "Переходы", d: op, y: "y2", c: "--c3" }])}</div>
+    <div class="card"><h2>Конверсии, ср. 7 дней</h2>${line("s2", dates, [{ l: "CR в корзину, %", d: ratio(roll(ca), roll(op)) }, { l: "CR в заказ, %", d: ratio(roll(or), roll(ca)), c: "--c2" }])}</div>
+    <div class="card"><h2>Цена, СПП</h2>${line("s3", dates, [{ l: "Цена продавца", d: ser(nm, "price").map(v => v || null) }, { l: "Цена покупателя", d: ser(nm, "bprice").map(v => v || null), c: "--c2" }, { l: "СПП, %", d: ser(nm, "spp").map(v => v || null), y: "y2", c: "--c3" }], { zero: false, zero2: false })}</div>
+    <div class="card"><h2>Реклама по дням</h2>${line("s4", dates, [{ l: "Расход, ₽", d: ser(nm, "ad_sum"), t: "bar", c: "--c4" }, { l: "Рекл. заказы", d: ser(nm, "ad_orders"), y: "y2" }, { l: "Все заказы", d: or, y: "y2", c: "--c2" }])}</div>
+  </div>
+  <div class="card"><h2>По неделям (${wk.length} недель)</h2>${T("skuwk", weekCols, wk.slice().reverse(), { h: 380 })}</div>
+  <div class="grid">
+    <div class="card"><h2>Юнитка на 1 шт против медианы кабинета</h2><div class="wf">${wf.map(x => { const v = x.mine; if (v == null) return ""; const mx = Math.max(Math.abs(v), Math.abs(x.med || 0), 1); const worse = x.L.dir === "low" ? v > x.med * 1.05 : v < x.med * 0.95;
+      return `<div class="bar"><span>${esc(x.t)}</span><span class="t"><i style="left:0;width:${Math.min(Math.abs(v) / (x.max || mx) * 100, 100)}%;background:var(${x.id === "net1" ? (v < 0 ? "--bad" : "--good") : worse ? "--warn" : "--c4"})"></i></span><span class="d ${worse ? "wr" : ""}">${N(v)} ₽ <span class="meta">мед. ${N(x.med)}</span></span></div>`; }).join("")}</div>
+      ${ux ? `<p class="note">Таблица менеджеров: прибыль ${N(ux.net_t)} ₽/шт против факта ${N(ux.net_o)} ₽ — главное расхождение: <b>${esc(ux.main)}</b> (${dlt(ux.diffs[ux.main], false, " ₽")}).</p>` : ""}</div>
+    <div class="card"><h2>Юнитка по неделям: факт и таблица</h2>${T("skupnl", [["w", "Неделя", null, "l"], ["qty", "Продажи", N], ["price", "Цена", money], ["wbp", "WB удержал/шт", money], ["log1", "Логист.", money], ["ads1", "Рекл./шт", money], ["net1", "Прибыль/шт факт", netCls], ["th", "Прибыль/шт табл.", netCls], ["net", "Прибыль, ₽", netCls]],
+      pw.map(r => { const t2 = th.find(h => h.w.startsWith(r.w)); return { ...r, th: t2 ? t2.net1 : null }; }), { h: 340 })}</div>
+  </div>
+  ${revBlock(nm)}
+  <div class="card"><div class="row sp"><h2>Ключи рекламы этого артикула (${krows.length})</h2><a class="lnk" data-set="asub=keys&tab=ads">все кампании →</a></div>${clusterTable(krows.slice(0, 200), "skuk", true)}</div>
+  ${gp ? `<div class="card"><div class="row sp"><h2>Против конкурентов по ключам: потеря ≈ ${N(gp.lost)} показов за 14 дней</h2><a class="lnk" data-set="tsub=gaps&gapnm=${nm}&tab=traffic">подробно →</a></div>
+    <div class="row">${Object.entries(gp.count).map(([c, n]) => pill(`${(GAPC[c] || [c])[0]}: ${n}`, (GAPC[c] || [0, "mute"])[1])).join(" ")}</div>${gapTable(gp.rows.filter(r => r.cls !== "lead" && r.cls !== "ok").slice(0, 15), "skug")}</div>` : ""}
+  <div class="card"><h2>Кампании с этим артикулом</h2>${campTable(camps, "skucamps")}</div>
+  <div class="card"><h2>Поисковые запросы WB (${span} дней — WB отдаёт запросы только за 7 или 30 дней)</h2>${searchTable(sq, "skuq")}</div>
+  ${mk ? `<div class="card"><h2>Рынок аромата «${esc(s.aroma)}» (MPSTATS ${fmtD(D.meta.mp_period?.[0])}–${fmtD(D.meta.mp_period?.[1])})</h2>${marketTable(mk.items.slice(0, 12), "skumk")}</div>` : ""}
+  <div class="card"><div class="row sp"><h2>Заметки команды по артикулу</h2><span class="meta" id="noteWho"></span></div><div id="noteList" class="notes"><p class="meta">Загружаю…</p></div>
+  <div id="noteForm"><textarea id="noteTxt" placeholder="Что сделали, что проверить, гипотезы… Заметку увидят все, у кого есть доступ к пульту"></textarea><div class="row"><button class="btn" id="noteSave">Добавить заметку</button><span class="meta" id="noteSt"></span></div></div></div>`;
+};
+const _ovV = VIEWS.overview; VIEWS.overview = () => { const h = _ovV(); after(teamNotes); return h; };
+const _skuV = VIEWS.sku; VIEWS.sku = () => { const h = _skuV(); after(() => { const b = $("#askBtn"); if (b) b.onclick = ask; notes(); }); return h; };
+function revBlock(nm) {
+  const w = D.reviews?.weeks?.[nm]; if (!w || !w.length) return "";
+  const ev = (D.reviews.events || []).map(e => `${fmtD(e.d)}: ${esc(e.t)}`).join("; ");
+  const rows = w.slice().reverse().map(x => ({ ...x, wl: fmtD(x.w), lg: x.n ? x["Стойкость"] / x.n * 100 : null, np: x.n ? x["Не похож"] / x.n * 100 : null }));
+  return `<div class="card"><h2>Отзывы по неделям (MPSTATS)</h2><p class="note">События: ${ev}</p>
+  ${line("rv" + nm, w.map(x => x.w), [{ l: "Средняя оценка", d: w.map(x => x.avg) }, { l: "Доля 1–3★, %", d: w.map(x => x.neg), y: "y2", c: "--c2" }, { l: "Жалобы на стойкость, % отзывов", d: w.map(x => x.n ? x["Стойкость"] / x.n * 100 : null), y: "y2", c: "--c3" }], { zero: false })}
+  ${T("rev" + nm, [["wl", "Неделя с", null, "l"], ["n", "Отзывов", N], ["avg", "Средняя", v => `<span class="${v < 4 ? "dn" : ""}">${N(v, 2)}</span>`], ["neg", "1–3★, %", N], ["lg", "Стойкость, %", v => N(v, 1)], ["np", "Не похож, %", v => N(v, 1)], ["Спирт/резкий", "Спирт", N], ["Брак/недолив", "Брак", N], ["Пересорт", "Пересорт", N]], rows, { h: 300 })}</div>`;
+}
+function adsDays() { if (D._adsStart) return D._adsStart; let m = "9999"; (D.ads || []).forEach(c => Object.keys(c.daily || {}).forEach(d => { if (d < m) m = d; })); return D._adsStart = m; }
+function campR(c) {
+  const R = RG(), t = [0, 0, 0, 0, 0, 0], q = [0, 0, 0, 0, 0, 0];
+  Object.entries(c.daily || {}).forEach(([d, v]) => { if (d >= R.a && d <= R.b) v.forEach((x, j) => t[j] += x); else if (d >= R.pa && d <= R.pb) v.forEach((x, j) => q[j] += x); });
+  const s0 = adsDays() > R.pa ? adsDays() : R.pa, pd = Math.max(0, (Date.parse(R.pb) - Date.parse(s0)) / 864e5 + 1);
+  return { t, q, k: pd && pd !== R.len ? R.len / pd : 1 };
+}
+function campTable(rows, id) {
+  const r = rows.map(c => { const { t, q, k } = campR(c); const qq = q.map(v => v * k);
+    return { id: c.id, name: c.name, type: c.type, status: c.status, vcs: c.vcs.join(", "), sp: t[2], dsp: qq[2] ? (t[2] / qq[2] - 1) * 100 : null,
+      views: t[0], clicks: t[1], ctr: t[0] ? t[1] / t[0] * 100 : null, cpc: t[1] ? t[2] / t[1] : null, atbs: t[3], orders: t[4], dor: qq[4] ? (t[4] / qq[4] - 1) * 100 : null,
+      assoc: c.assoc_orders, ash: c.t30[4] ? c.assoc_orders / c.t30[4] * 100 : null, cr: t[1] ? t[4] / t[1] * 100 : null, cpo: t[4] ? t[2] / t[4] : null, drr: t[5] ? t[2] / t[5] * 100 : null, unit: c.unit_pre,
+      waste: (D.clusters?.sum || []).filter(x => x.aid === c.id).reduce((a, x) => a + x.waste, 0) || null }; });
+  if (!st.sort[id]) r.sort((a, b) => b.sp - a.sp);
+  return T(id, [["name", "Кампания", (v, x) => `<span title="${esc(x.vcs)}">${esc(v)}</span>`, "l"], ["type", "Тип", null, "l"], ["status", "Статус", v => pill(v, v === "активна" ? "A" : v === "пауза" ? "mid" : "C")],
+    ["sp", "Расход за период", money], ["dsp", "Δ расхода", v => dltc(v, 0, "%")], ["views", "Показы", N], ["ctr", "CTR", v => N(v, 2)], ["cpc", "CPC", v => N(v, 1)], ["atbs", "Корзины", N],
+    ["orders", "Заказы", N], ["dor", "Δ заказов", v => dlt(v)], ["cr", "CR клик→заказ", pct], ["cpo", "CPO", money], ["drr", "ДРР", pct], ["assoc", "Ассоц. заказы 30д", N], ["ash", "Доля ассоц. 30д", pct], ["unit", "Прибыль до рекл./шт", money], ["waste", "Поиск без заказов 30д, ₽", v => v ? `<span class="dn">${N(v)}</span>` : "—"]],
+    r, { click: "camp", hint: `период ${rgLab().cur} к ${rgLab().prv} · клик — кампания и её ключи` });
+}
+function clusterTable(rows, id, showCamp) {
+  const f = st.filters["v_" + id]; let r = rows; if (f) r = r.filter(x => x.v === f);
+  const cnt = {}; rows.forEach(x => cnt[x.v] = (cnt[x.v] || 0) + 1);
+  return `<div class="row"><select data-f="v_${id}"><option value="">Все вердикты (${rows.length})</option>${Object.entries(VERD).filter(([k]) => cnt[k]).map(([k, [t]]) => `<option value="${k}" ${f === k ? "selected" : ""}>${t} (${cnt[k]})</option>`).join("")}</select></div>` +
+    T(id, [["q", "Поисковый кластер", null, "l"], ...(showCamp ? [["camp", "Кампания", v => esc((v || "").slice(0, 26)), "l"]] : []), ["v", "Вердикт", v => pill(VERD[v][0], VERD[v][1])], ["views", "Показы", N], ["clicks", "Клики", N], ["ctr", "CTR", v => N(v, 2)], ["cpc", "CPC", v => N(v, 1)], ["cpm", "CPM", v => N(v)],
+      ["spend", "Расход, ₽", money], ["atbs", "Корзины", N], ["orders", "Заказы", N], ["cpo", "CPO", money], ["pos", "Ср. позиция", v => N(v, 1)]], r, { h: 460 });
+}
+function gapTable(rows, id) {
+  return T(id, [["q", "Запрос", null, "l"], ["cls", "Ситуация", v => pill((GAPC[v] || [v])[0], (GAPC[v] || [0, "mute"])[1])], ["freq", "Частота/сут", N], ["my_pos", "Ваша поз.", (v, r) => v ? `${N(v)}${r.my_ad != null ? ' <span class="meta">р</span>' : ""}` : "—"],
+    ["r_pos", "Конкурент поз.", (v, r) => v ? `${N(v)}${r.r_ad != null ? ' <span class="meta">р</span>' : ""}` : "—"], ["rival", "Конкурент", v => esc((v || "").slice(0, 18)), "l"], ["my_tr", "Ваш трафик 14д", N], ["r_tr", "Его трафик 14д", N], ["lost", "Недобор", v => v ? `<b>${N(v)}</b>` : "—"]], rows, { h: 420 });
+}
+function searchTable(items, id) {
+  const r = items.map(x => ({ ...x, crc: x.opens ? x.cart / x.opens * 100 : null, cro: x.opens ? x.orders / x.opens * 100 : null }));
+  return T(id, [["q", "Запрос", null, "l"], ["kind", "Тип", null, "l"], ["freq", "Частота", N], ["dfreq", "Δ частоты", v => dlt(v, false, "")], ["pos", "Позиция", N], ["dpos", "Δ поз.", v => dlt(v, true, "")],
+    ["vis", "Видимость, %", N], ["opens", "Переходы", N], ["cart", "Корзины", N], ["orders", "Заказы", N], ["crc", "CR корз.", pct], ["cro", "CR заказ", pct]], r, { h: 420 });
+}
+function marketTable(items, id) {
+  return T(id, [["name", "Карточка", (v, x) => `<a class="lnk" href="https://www.wildberries.ru/catalog/${x.id}/detail.aspx" target="_blank" rel="noopener">${esc(v.slice(0, 48))}</a>`, "l"], ["seller", "Продавец", v => esc((v || "").slice(0, 22)), "l"], ["rev", "Выручка, ₽", money], ["share", "Доля", pct],
+    ["sales", "Продажи", N], ["price", "Цена", money], ["rating", "Рейт.", v => N(v, 1)], ["comments", "Отзывы", N], ["neg", "Свежий негатив", pct], ["org", "Орг. позиция", N], ["adpos", "Рекл. позиция", N],
+    ["words", "Слов в поиске", N], ["adwords", "из них в рекламе", N], ["ext", "Внешн. реклама", v => v ? "да" : ""], ["set", "Набор", v => v ? "да" : ""], ["desc", "Описание, зн.", N]], items, { me: x => x.me, h: 420 });
+}
+async function ask() {
+  const s = D.byNm[st.nm]; const out = $("#askOut"); const sample = await cap("sample");
+  if (!sample) { out.textContent = "Вопрос Claude недоступен в этом просмотре."; return; }
+  const keys = (D.clusters?.sum || []).filter(x => x.nm === s.nm).flatMap(x => (D.clusters.rows[`${x.aid}|${x.nm}`] || []).slice(0, 15).map(r => ({ кампания: x.name, ...r })));
+  const ctx = { артикул: s.vc, nm: s.nm, выбранный_период: { даты: rgLab().cur, ...PA(s.nm).a }, предыдущий_период: { даты: rgLab().prv, ...PA(s.nm).b }, аромат: s.aroma, abc: s.abc, "7д": s.p7, "пред7д": s.p7b, "30д": s.p30, "пред30д": s.p30b, "разложение30д": s.dec30, юнитка30д: s.pnl30,
+    трафик: D.traffic?.own?.[s.nm], кампании: (D.ads || []).filter(c => c.nms.includes(s.nm)).map(c => ({ name: c.name, type: c.type, status: c.status, t30: c.t30, t7: c.t7, assoc: c.assoc_orders })),
+    ключи_рекламы: keys, разрывы_с_конкурентами: (D.traffic?.gaps?.[s.nm]?.rows || []).slice(0, 15), запросы30д: (D.search?.items?.[s.nm]?.["30"] || []).slice(0, 15),
+    рынок: (D.market?.aromas?.[s.aroma]?.items || []).slice(0, 8), рекомендации: (D.recs || []).filter(r => r.nm === s.nm) };
+  out.textContent = "Думаю…";
+  try {
+    await sample([{ role: "user", content: `Ты аналитик Wildberries. Продавец духов-дупов, в основном FBS. Модель прибыли: факт удержаний WB + косвенные 10% + УСН 6% + НДС 5%. t30/t7 кампаний = [показы, клики, расход, корзины, заказы, сумма]; p7/p30 — воронка (opens = переходы). Трафик: parts — источники переходов. Ключи рекламы — поисковые кластеры с вердиктом. Разбери артикул: что происходит, почему, и дай 5 конкретных действий с цифрами (реклама — полки/поиск/CPC/единая и минус-фразы, цена, карточка, склейка, отзывы). Коротко, по-русски.\n\nДанные:\n${JSON.stringify(ctx)}` }],
+      { onText: ({ text }) => { out.textContent = text; }, modelTier: "default" });
+  } catch (e) { out.textContent = e.code === "not_granted" ? "Доступ к Claude не разрешён для этой страницы." : "Не получилось: " + (e.message || e.code); }
+}
+const fmtTs = t => t ? new Date(t).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
+async function viewer() { const u = await cap("user"); if (!u) return { u: null, id: null, w: null }; return { u, id: await u.id(), w: await u.can("data.write") }; }
+async function names(u, ids) { try { return u && ids.length ? await u.profiles(ids) : {}; } catch (e) { return {}; } }
+async function notes() {
+  if (GN.on()) return notesGH();
+  const ta = $("#noteTxt"), bt = $("#noteSave"), stt = $("#noteSt"), list = $("#noteList"), form = $("#noteForm"), who = $("#noteWho"), nm = st.nm; if (!ta) return;
+  const db = await cap("db");
+  const pk = "pnotes_" + nm, pget = () => { try { return JSON.parse(localStorage.getItem(pk) || "[]"); } catch (e) { return []; } }, pset = a => { try { localStorage.setItem(pk, JSON.stringify(a)); } catch (e) {} };
+  const personal = () => pget().map((x, i) => ({ id: "_p" + i, text: x.text, at: x.at, mine: true, pi: i }));
+  const usePersonal = msg => { who.textContent = msg; ta.placeholder = "Личная заметка — видна только вам, в этом браузере"; bt.textContent = "Сохранить для себя";
+    bt.onclick = () => { const text = ta.value.trim(); if (!text) return; const a = pget(); a.unshift({ text, at: new Date().toISOString() }); pset(a); ta.value = ""; stt.textContent = "Сохранено в этом браузере"; drawP(); }; };
+  let teamItems = [];
+  const drawP = () => { if (!document.body.contains(list)) return; const all = [...teamItems, ...personal()].sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
+    list.innerHTML = all.length ? "" : '<p class="meta">Заметок пока нет.</p>';
+    all.forEach(x => { const d = document.createElement("div"); d.className = "note-i"; const h = document.createElement("div"); h.className = "meta";
+      h.textContent = `${x.mine ? "Личная (видна только вам)" : x.old ? "Ранняя заметка" : (x.name || "Участник")} · ${fmtTs(x.at)}`;
+      if (x.mine) { const del = document.createElement("a"); del.className = "lnk"; del.textContent = "удалить"; del.onclick = () => { const a = pget(); a.splice(x.pi, 1); pset(a); drawP(); }; h.append(" · ", del); }
+      const t = document.createElement("div"); t.style.whiteSpace = "pre-wrap"; t.textContent = x.text; d.append(h, t); list.append(d); }); };
+  if (!db) { usePersonal(window.PULT_SITE ? "общие заметки не подключены — свои можно вести здесь, они сохраняются в этом браузере" : "общие заметки команды видны после входа в Claude; здесь можно вести свои"); drawP(); return; }
+  const v = await viewer();
+  if (v.w === false) usePersonal("общие заметки ведут владелец и редакторы; вы можете вести свои");
+  const col = db.collection("tnotes");
+  const draw = async () => {
+    let items = [];
+    try { const snap = await col.where("nm", "==", nm).limit(200).get(); items = snap.docs.filter(d => d.exists).map(d => ({ id: d.id, ...d.data() })); } catch (e) {}
+    try { const old = await db.doc("notes/" + nm).get(); if (old.exists && old.data()?.text) items.push({ id: "_old", text: old.data().text, at: old.data().updated, old: true }); } catch (e) {}
+    items.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
+    if (st.nm !== nm || !document.body.contains(list)) return;
+    const ps = await names(v.u, [...new Set(items.map(x => x.by).filter(Boolean))]);
+    if (v.w === false) { teamItems = items.map(x => ({ ...x, name: ps[x.by]?.name })); drawP(); return; }
+    list.innerHTML = items.length ? "" : '<p class="meta">Заметок пока нет.</p>';
+    items.forEach(x => { const d = document.createElement("div"); d.className = "note-i";
+      const h = document.createElement("div"); h.className = "meta"; h.textContent = `${x.old ? "Ранняя заметка" : (ps[x.by]?.name || "Участник")} · ${fmtTs(x.at)}`;
+      const t = document.createElement("div"); t.style.whiteSpace = "pre-wrap"; t.textContent = x.text; d.append(h, t);
+      if (!x.old && x.by && x.by === v.id) { const del = document.createElement("a"); del.className = "lnk"; del.textContent = "удалить"; del.onclick = async () => { try { await col.doc(x.id).delete(); draw(); } catch (e) { stt.textContent = "Не удалилось: " + (e.code || e.message); } }; h.append(" · ", del); }
+      list.append(d); });
+  };
+  if (v.w !== false) bt.onclick = async () => { const text = ta.value.trim(); if (!text) return; bt.disabled = true;
+    try { await col.add({ nm, vc: D.byNm[nm]?.vc || String(nm), text, by: v.id, at: new Date().toISOString() }); ta.value = ""; stt.textContent = "Добавлено"; await draw(); }
+    catch (e) { stt.textContent = /denied|grant|writer|permission/i.test(e.code || e.message || "") ? "Нет права на запись — владелец может дать роль с правом редактирования" : "Не сохранилось: " + (e.code || e.message); }
+    bt.disabled = false; };
+  draw();
+}
+async function teamNotes() {
+  if (GN.on()) return teamNotesGH();
+  const box = $("#teamNotes"); if (!box) return; const db = await cap("db");
+  if (!db) { box.innerHTML = window.PULT_SITE ? '<p class="meta">Общие заметки не подключены.</p>' : '<p class="meta">Заметки команды видны после входа в Claude.</p>'; return; }
+  let items = []; try { const snap = await db.collection("tnotes").orderBy("at", "desc").limit(8).get(); items = snap.docs.filter(d => d.exists).map(d => d.data()); } catch (e) {}
+  const v = await viewer(); const ps = await names(v.u, [...new Set(items.map(x => x.by).filter(Boolean))]);
+  if (!document.body.contains(box)) return;
+  box.innerHTML = items.length ? "" : '<p class="meta">Пока нет. Заметки добавляются внизу страницы артикула — их видят все, у кого есть доступ.</p>';
+  items.forEach(x => { const d = document.createElement("div"); d.className = "note-i"; const h = document.createElement("div"); h.className = "meta";
+    const a = document.createElement("a"); a.className = "lnk"; a.textContent = x.vc || String(x.nm); a.onclick = () => go("sku", x.nm);
+    h.append(a, ` · ${ps[x.by]?.name || "Участник"} · ${fmtTs(x.at)}`); const t = document.createElement("div"); t.style.whiteSpace = "pre-wrap"; t.textContent = x.text; d.append(h, t); box.append(d); });
+}
+
+/* ---------- ТРАФИК ---------- */
+VIEWS.traffic = () => {
+  const subs = seg("tsub", [["own", "Источники трафика"], ["profiles", "Как продвигаются конкуренты"], ["gaps", "Где мы отстаём"]]);
+  return `<div class="row sp"><h1>Трафик</h1>${subs}</div>` + (TRF[st.tsub] || TRF.own)();
+};
+const TRF = {};
+TRF.own = () => {
+  const own = D.traffic?.own || {}; const rows = Object.entries(own).map(([nm, t]) => ({ nm: +nm, vc: D.byNm[nm]?.vc || nm, abc: D.byNm[nm]?.abc || "—", ...t, ...Object.fromEntries(TR.map(([k]) => ["s_" + k, t.shares[k]])), sp_shelf: (t.spend.shelf || 0), sp_search: (t.spend.search || 0) + (t.spend.cpc || 0), sp_uni: t.spend.unified || 0 }));
+  if (!st.sort.trown) rows.sort((a, b) => b.opens - a.opens);
+  const tp = {}; TR.forEach(([k]) => tp[k] = rows.reduce((a, x) => a + (x.parts[k] || 0), 0)); const tt = Object.values(tp).reduce((a, b) => a + b, 0) || 1; const tsh = {}; TR.forEach(([k]) => tsh[k] = tp[k] / tt * 100);
+  const top = rows.slice().sort((a, b) => b.opens - a.opens).slice(0, 12);
+  return `<div class="callout">Как считаем: все переходы в карточку — воронка WB; переходы из поиска (органика + реклама в поиске) — отчёт WB «Поисковые запросы» по всем запросам; платный поиск — клики поисковых кампаний и поисковых кластеров единых кампаний; полки — клики рекомендательных кампаний и рекомендательная часть единых; поиск по артикулу — запросы-номера. «Прочее» = остаток: каталог, бесплатные рекомендации, внешний трафик, избранное и корзина. Клики рекламы ≈ переходы, поэтому доли — оценка.</div>
+  <div class="card"><h2>Кабинет, 30 дней: ${N(tt)} переходов</h2>${stack(tsh)}${legend()}<p class="note">${TR.map(([k, l]) => `${l}: <b>${N(tp[k])}</b> (${N(tsh[k], 1)}%)`).join(" · ")}</p></div>
+  <div class="card"><h2>Топ-12 карточек: структура трафика</h2><div class="bars">${top.map(r => `<div class="bar" style="grid-template-columns:170px 1fr 84px"><a class="lnk" data-go="${r.nm}">${esc(r.vc)}</a>${stack(r.shares)}<span class="d">${N(r.opens)}</span></div>`).join("")}</div>${legend()}</div>
+  <div class="card"><h2>Все карточки</h2>${T("trown", [["vc", "Артикул", vcLink, "l"], ["abc", "ABC", abcPill], ["opens", "Переходы 30д", N], ["search_total", "Из поиска", N], ["search_dopen", "Δ поиска, %", v => dlt(v)], ["s_org_search", "Орг. поиск %", pct], ["s_paid_search", "Платн. поиск %", pct], ["s_article", "По артикулу %", pct],
+    ["s_paid_rec", "Полки %", v => v >= 50 ? `<b class="wr">${N(v, 1)}%</b>` : pct(v)], ["s_other", "Прочее %", pct], ["search_pos", "Поз. в поиске", N], ["search_dpos", "Δ поз.", v => dlt(v, true, "")], ["search_vis", "Видимость %", N], ["cr_search", "CR поиск→заказ", v => N(v, 2) + "%"], ["cr_all", "CR все→заказ", v => N(v, 2) + "%"],
+    ["sp_shelf", "Полки ₽", money], ["sp_uni", "Единая ₽", money], ["sp_search", "Поиск/CPC ₽", money]], rows, { click: "sku", h: 560 })}</div>`;
+};
+TRF.profiles = () => {
+  const P_ = Object.values(D.traffic?.profiles || {}); const aromas = [...new Set(P_.map(p => p.aroma).filter(Boolean))].sort((a, b) => a.localeCompare(b, "ru"));
+  if (!st.taroma || !aromas.includes(st.taroma)) st.taroma = aromas.includes(D.byNm[st.nm]?.aroma) ? D.byNm[st.nm].aroma : aromas[0];
+  const rows = P_.filter(p => p.aroma === st.taroma).map(p => ({ ...p, nm: p.me ? p.id : null })).sort((a, b) => (b.me - a.me) || (b.traffic14 - a.traffic14));
+  const me = rows.filter(r => r.me), rv = rows.filter(r => !r.me);
+  const avg = (a, k) => a.length ? a.reduce((s, x) => s + (x[k] || 0), 0) / a.length : null;
+  return `<div class="row"><select data-st="taroma">${aromas.map(a => `<option ${a === st.taroma ? "selected" : ""}>${esc(a)}</option>`).join("")}</select><span class="meta">MPSTATS: позиции по ключам за 14 дней (по дням, органика и реклама отдельно) + карточка товара.</span></div>
+  <div class="kpis"><div class="kpi"><span class="l">Поисковый трафик 14д: вы / конкуренты (сред.)</span><span class="v">${N(avg(me, "traffic14"))} / ${N(avg(rv, "traffic14"))}</span></div>
+  <div class="kpi"><span class="l">Доля платного поиска: вы / конкуренты</span><span class="v">${N(avg(me, "paid_share"), 1)}% / ${N(avg(rv, "paid_share"), 1)}%</span></div>
+  <div class="kpi"><span class="l">Ключей в топ-10: вы / конкуренты</span><span class="v">${N(avg(me, "top10"))} / ${N(avg(rv, "top10"))}</span></div>
+  <div class="kpi"><span class="l">Медиана CPM в поиске: вы / конкуренты</span><span class="v">${N(median(me.map(x => x.cpm)))} / ${N(median(rv.map(x => x.cpm)))} ₽</span></div></div>
+  ${T("prof", [["name", "Карточка", (v, r) => r.me ? `<a class="lnk" data-go="${r.id}">★ ${esc(v.slice(0, 40))}</a>` : `<a class="lnk" href="https://www.wildberries.ru/catalog/${r.id}/detail.aspx" target="_blank" rel="noopener">${esc(v.slice(0, 40))}</a>`, "l"], ["seller", "Продавец", v => esc((v || "").slice(0, 20)), "l"], ["strategy", "Как продвигается", v => esc(v), "l"],
+    ["traffic14", "Поиск: показы 14д", N, "", "Оценка MPSTATS: сумма трафика по ключам"], ["paid_share", "Платно, %", pct], ["words", "Ключей", N], ["top10", "в топ-10", N], ["top30", "в топ-30", N], ["ad_words", "в рекламе", N], ["cpm", "CPM", N],
+    ["org_pos", "Орг. поз.", N], ["ad_pos", "Рекл. поз.", N], ["cat_pos", "Поз. в каталоге", N], ["promo", "Акции", N], ["ext", "Внешняя", v => v ? "да" : ""], ["price", "Цена", money], ["sales", "Продажи", N], ["rev", "Выручка", money], ["rating", "Рейт.", v => N(v, 1)], ["comments", "Отзывы", N], ["neg", "Негатив %", pct], ["pics", "Фото", N], ["video", "Видео", v => v ? "да" : ""], ["desc", "Описание", N]],
+    rows, { me: r => r.me })}
+  <p class="note">Как читать: «платный поиск» — больше 60% показов в поиске идут через рекламные места; «органика» — до 20% платно и 5+ ключей в топ-10. «Поз. в каталоге» — средняя позиция в категориях. «Акции» — участие в акциях WB.</p>`;
+};
+TRF.gaps = () => {
+  const G = D.traffic?.gaps || {}; const ids = Object.keys(G).map(Number).sort((a, b) => D.order.indexOf(a) - D.order.indexOf(b));
+  if (!st.gapnm || !G[st.gapnm]) st.gapnm = G[st.nm] ? st.nm : ids[0]; const g = G[st.gapnm]; if (!g) return `<div class="card">Нет данных MPSTATS по ключам.</div>`;
+  const f = st.filters.gcls; const rows = f ? g.rows.filter(r => r.cls === f) : g.rows;
+  const summ = ids.map(nm => ({ id: nm, nm, vc: D.byNm[nm]?.vc, aroma: G[nm].aroma, lost: G[nm].lost, ...Object.fromEntries(Object.keys(GAPC).map(c => ["c_" + c, G[nm].count[c] || 0])) }));
+  return `<div class="callout">Для каждой вашей карточки — ключи, по которым показываются вы и 4 главных конкурента аромата (MPSTATS, 14 дней). «Недобор» — разница в оценке показов: сколько показов по запросу получает лучший конкурент сверх вас.</div>
+  ${T("gsum", [["vc", "Артикул", vcLink, "l"], ["aroma", "Аромат", null, "l"], ["lost", "Недобор показов 14д", N], ["c_absent", "Вас нет", N], ["c_rival_paid", "Конк. покупает", N], ["c_rival_organic", "Конк. органикой", N], ["c_overpay", "Переплата", N], ["c_lead", "Вы впереди", N], ["c_ok", "Рядом", N]], summ, { click: "gap", sel: r => r.nm === st.gapnm, h: 300, hint: "клик — ключи карточки" })}
+  <div class="card"><div class="row sp"><h2>${esc(D.byNm[st.gapnm]?.vc)} против: ${g.rivals.map(r => esc(D.traffic.profiles[r]?.brand || D.traffic.profiles[r]?.seller || r)).join(", ")}</h2>
+  <select data-f="gcls"><option value="">Все ситуации (${g.rows.length})</option>${Object.entries(GAPC).map(([k, [t]]) => `<option value="${k}" ${f === k ? "selected" : ""}>${t} (${g.count[k] || 0})</option>`).join("")}</select></div>
+  <div class="note">Что делать: <b>«Вас нет в выдаче»</b> — добавить запрос в название/описание/характеристики и в рекламный кластер · <b>«Конкурент покупает»</b> — включить кластер в единую/CPC, если запрос по аромату · <b>«Конкурент выше органикой»</b> — SEO, обложка, отзывы, временно ставка · <b>«Переплата»</b> — органика сильная, ставку можно снизить.</div>
+  ${gapTable(rows, "gaps")}</div>`;
+};
+
+/* ---------- КОНКУРЕНТЫ ---------- */
+VIEWS.comp = () => {
+  const ar = D.market?.aromas || {}; const list = Object.entries(ar).map(([a, m]) => { const me = m.items.filter(x => x.me); const top = m.items.find(x => !x.me) || {};
+    return { id: a, aroma: a, total: m.total, share: me.reduce((s, x) => s + x.share, 0), place: m.items.findIndex(x => x.me) + 1 || null, myprice: me[0]?.price, lprice: top.price, lseller: top.seller, lrev: top.rev, lorg: top.org, myorg: me[0]?.org, set: top.set }; });
+  list.sort((a, b) => b.total - a.total);
+  if (!st.aroma) st.aroma = (D.byNm[st.nm] || {}).aroma || list[0]?.id;
+  const m = ar[st.aroma]; let kwHtml = "";
+  if (m) {
+    const kw = D.market?.kw || {};
+    const own = (D.sku || []).filter(x => x.aroma === st.aroma && kw[x.nm]?.words && Object.keys(kw[x.nm].words).length).sort((a, b) => b.p30.orders - a.p30.orders).slice(0, 2).map(x => String(x.nm));
+    const riv = m.items.filter(x => !x.me && kw[x.id]?.words && Object.keys(kw[x.id].words).length).slice(0, 5).map(x => String(x.id));
+    const ids = [...own, ...riv];
+    const label = id => { const it = m.items.find(x => String(x.id) === id); if (D.byNm[id]) return "★ " + D.byNm[id].vc.slice(0, 16); return (it?.brand || it?.seller || id).slice(0, 16); };
+    if (ids.length) {
+      const words = {}; ids.forEach(id => Object.entries(kw[id].words).forEach(([w, v]) => { const r = words[w] = words[w] || { w, freq: v.freq || 0 }; r["c" + id] = v; r.freq = Math.max(r.freq, v.freq || 0); }));
+      const rows = Object.values(words).sort((a, b) => (b.freq || 0) - (a.freq || 0)).slice(0, 80);
+      const cell = v => { if (!v) return "—"; const p = v.last ?? v.avg; const org = v.last_org; const ad = v.last_ad != null;
+        return `<span class="${p <= 10 ? "up" : p > 50 ? "dn" : ""}" title="средняя ${v.avg ?? "—"}, органика ${v.org ?? "—"}, реклама ${v.ad ?? "—"}, трафик ${v.traffic}">${p ?? "—"}</span>${ad ? ' <span class="meta">р</span>' : ""}${org && ad ? ` <span class="meta">(о ${org})</span>` : ""}`; };
+      kwHtml = `<div class="card"><h2>Позиции по запросам: вы (★) против конкурентов</h2><p class="note">MPSTATS, последний день. «р» — показ через рекламу, «о N» — органическая позиция. Наведите на число — средняя за 14 дней и трафик.</p>
+      ${T("kw", [["w", "Запрос", null, "l"], ["freq", "Частота WB/сут", N], ...ids.map(id => ["c" + id, label(id), v => cell(v)])], rows, { h: 520 })}</div>`;
+      const sl = D.market?.sales || {}; const sids = ids.filter(id => (sl[id] || []).length);
+      if (sids.length) { const ds = [...new Set(sids.flatMap(id => sl[id].map(r => r.d)))].sort();
+        kwHtml += `<div class="grid"><div class="card"><h2>Продажи в день (MPSTATS, FBO+FBS)</h2>${line("cs1", ds, sids.map((id, i) => ({ l: label(id), d: ds.map(d => (sl[id].find(r => r.d === d) || {}).sales ?? null), c: ["--c1", "--c2", "--c3", "--c4"][i % 4] })))}</div>
+        <div class="card"><h2>Цена покупателя</h2>${line("cs2", ds, sids.map((id, i) => ({ l: label(id), d: ds.map(d => (sl[id].find(r => r.d === d) || {}).price ?? null), c: ["--c1", "--c2", "--c3", "--c4"][i % 4] })), { zero: false })}</div></div>`; }
+    }
+  }
+  return `<div class="row sp"><h1>Конкуренты по ароматам</h1><a class="lnk" data-set="tsub=profiles&tab=traffic">как продвигаются →</a></div><p class="note">MPSTATS, ниша «Духи», FBO+FBS, ${fmtD(D.meta.mp_period?.[0])}–${fmtD(D.meta.mp_period?.[1])}. Рынок — 30 крупнейших карточек с ароматом в названии. Клик по строке — подробности.</p>
+  ${T("aromas", [["aroma", "Аромат", null, "l"], ["total", "Рынок, ₽", money], ["share", "Ваша доля", pct], ["place", "Ваше место", N], ["myprice", "Ваша цена", money], ["lprice", "Цена лидера", money], ["myorg", "Ваша орг. поз.", N], ["lorg", "Орг. поз. лидера", N], ["lseller", "Лидер-конкурент", v => esc((v || "").slice(0, 24)), "l"], ["lrev", "Его выручка", money], ["set", "Лидер — набор", v => v ? "да" : ""]], list, { click: "aroma", sel: r => r.id === st.aroma, h: 360 })}
+  ${m ? `<div class="card"><h2>«${esc(st.aroma)}»: все карточки рынка</h2>${marketTable(m.items, "mk")}</div>${kwHtml}` : ""}`;
+};
+
+/* ---------- РЕКЛАМА ---------- */
+/* ---------- Сегодня: быстрое обновление каждый час (today.py) ---------- */
+const MONF = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+const cpoCell = (v, thr) => v == null ? "—" : !thr ? N(v) : `<span class="pill p-${v <= 0.8 * thr ? "good" : v <= thr ? "warn" : "bad"}">${N(v)}</span>`;
+VIEWS.today = () => {
+  if (!need(["today"])) return `<div class="empty">Загружаю…</div>`;
+  const X = D.today; if (!X) return `<div class="card">Данных за сегодня ещё нет. Обновление идёт само каждый час с 9 до 21, пока включён компьютер; вне расписания — ярлык «Пульт — сегодня» на рабочем столе.</div>`;
+  st.ysub = st.ysub || "nm"; const t = X.tot;
+  const mskDay = new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10);
+  const day = `${+X.date.slice(8, 10)} ${MONF[+X.date.slice(5, 7) - 1]}`;
+  const kpi = (l, v, d, m) => `<div class="kpi"><span class="l">${l}</span><span class="v">${v}</span>${d || ""}${m ? `<span class="meta">${m}</span>` : ""}</div>`;
+  const cpoT = t.ao ? t.sp / t.ao : null, cpoY = t.ao_y ? t.sp_y / t.ao_y : null;
+  const fb = t.src === "funnel";  // лента заказов WB отстаёт — заказы из аналитики WB, «вчера к этому времени» — оценка
+  const kp = [
+    kpi(fb ? "Заказы сегодня (аналитика WB)" : `Заказы к ${X.cut}`, N(t.o), dlt(P(t.o, t.o_y)), fb ? `вчера к ${X.cut} ≈ ${N(t.o_y)} · за весь день ${N(t.o_yfull)}` : `вчера к этому времени ${N(t.o_y)} · обычно ${N(t.o_avg)}`),
+    kpi("Сумма заказов, ₽", N(t.s), dlt(P(t.s, t.s_y)), `вчера к этому времени ${fb ? "≈ " : ""}${N(t.s_y)}`),
+    kpi("Прогноз на день", `~${N(t.fc)} шт`, dlt(P(t.fc, t.o_yfull)), `~${N(t.fc_s / 1e6, 2)} млн ₽ · вчера за день ${N(t.o_yfull)} шт`),
+    kpi("Расход на рекламу, ₽", N(t.sp), t.sp_ycut != null ? dlt(P(t.sp, t.sp_ycut), true) : "", t.sp_ycut != null ? `вчера к ${t.ycut_at}: ${N(t.sp_ycut)} · за день ${N(t.sp_y)}` : `вчера за весь день ${N(t.sp_y)}`),
+    kpi("Рекламные заказы", `${N(t.ao)} · ${N(cpoT)} ₽`, "", `вчера за день: ${N(t.ao_y)} · ${N(cpoY)} ₽ за заказ`),
+    kpi("ДРР", pct(t.s ? t.sp / t.s * 100 : null), "", `вчера ${pct(t.s_yfull ? t.sp_y / t.s_yfull * 100 : null)}`)].join("");
+  const stale = (X.date !== mskDay ? `<div class="callout w">Это данные за ${day}: сегодня быстрое обновление ещё не запускалось (идёт само с 9 до 21, пока включён компьютер).</div>` : "") +
+    (fb ? `<div class="callout w">Лента заказов WB отстаёт: последний заказ в ней — ${esc(t.feed_cut)}. Заказы за сегодня взяты из аналитики WB (воронка продаж), «вчера к этому времени» и прогноз — оценка по обычному ходу дня. Линия «сегодня» на графике появится, когда WB догрузит ленту.</div>` : "");
+  const al = X.alerts?.length ? `<div class="card"><h2>На что посмотреть</h2>${X.alerts.map(a => `<div class="callout ${a.k === "bad" ? "b" : "w"}" style="margin:6px 0">${esc(a.t)}</div>`).join("")}
+    <p class="meta">Рекламные заказы WB дописывает с задержкой: днём цена заказа выглядит дороже, чем окажется вечером. Сверяйте со вчерашней ценой в таблице кампаний.</p></div>` : "";
+  // шкала — время суток: «вчера» и «обычно» — нарастающий итог на конец каждого часа, «сегодня» доходит до последнего заказа в ленте.
+  // Сутки — как в WB (с полуночи по Москве); подписи — по местному времени (X.shift часов к МСК: Саратов +1), поэтому линии начинаются с 01:00
+  const sh = X.shift || 0, tzl = sh ? `время ${X.tz || "местное"}` : "время МСК";
+  const hm = x => { const m = Math.round(x * 60); return `${String(Math.floor(m / 60) % 24).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
+  const pts = a => (typeof a[0] === "number" ? (a.length < 25 ? [0, ...a] : a).map((y, i) => ({ x: i, y })) : a.map(([x, y]) => ({ x, y }))).map(p => ({ x: p.x + sh, y: p.y }));
+  after(() => {
+    const el = document.getElementById("tdh"); if (!el || !window.Chart) return;
+    const grid = css("--line"), mut = css("--muted"), tp = pts(X.hours.today);
+    const ds = (l, d, c, w, last) => ({ label: l, data: d, borderColor: css(c), backgroundColor: css(c), borderWidth: w, tension: .2, pointRadius: last ? d.map((_, i) => i === d.length - 1 ? 4 : 0) : 0 });
+    charts.push(new Chart(el, { type: "line", data: { datasets: [ds("Сегодня", tp, "--c1", 2.6, true), ds("Вчера", pts(X.hours.yday), "--c2", 1.8), ds("Обычно — среднее 7 дней", pts(X.hours.avg), "--c4", 1.8)] },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "nearest", axis: "x", intersect: false },
+        plugins: { legend: { labels: { color: mut, boxWidth: 10, font: { size: 11 } } }, tooltip: { callbacks: { title: it => "к " + hm(it[0].parsed.x), label: c => `${c.dataset.label}: ${N(c.parsed.y)}` } } },
+        scales: { x: { type: "linear", min: 0, max: 24 + sh, ticks: { stepSize: 2, includeBounds: false, color: mut, font: { size: 10 }, callback: v => String(v % 24).padStart(2, "0") + ":00" }, grid: { color: grid } },
+          y: { beginAtZero: true, ticks: { color: mut, font: { size: 10 } }, grid: { color: grid } } } } }));
+  });
+  const chart = `<div class="card"><div class="row sp"><h2>Заказы с начала суток WB</h2><span class="meta">${tzl}${sh ? ` · сутки WB начинаются в ${String(sh).padStart(2, "0")}:00` : ""}${fb ? " · лента заказов WB отстаёт — сегодняшней линии пока нет" : ` · сегодня — по ${X.cut}: ${N(t.o)} · вчера к этому времени ${N(t.o_y)}`}</span></div><div class="chart" style="height:240px"><canvas id="tdh"></canvas></div></div>`;
+  const ncols = [["vc", "Артикул", vcLink, "l"], ["o", fb ? "Заказы сегодня" : `Заказы к ${X.cut}`, N], ["o_y", fb ? `Вчера к ${X.cut} ≈` : "Вчера к этому времени", v => N(v)], ...(fb ? [] : [["o_avg", "Обычно (7 дн)", v => N(v)]]), ["dv", fb ? "К вчера" : "К обычному", v => dlt(v)],
+    ["s", "Сумма, ₽", N], ["sp", "Реклама, ₽", N], ["ao", "Рекл. заказы", N], ["cpo", "Цена рекл. заказа, ₽", (v, r) => cpoCell(v, r.thr), "", "Расход ÷ рекламные заказы за сегодня; цвет — против порога артикула"],
+    ["thr", "Порог, ₽", N, "", "Прибыль до рекламы × выкуп: дороже — реклама в минус"], ["flag", "", v => v ? pill(v, v === "меньше обычного" ? "bad" : "good") : ""]];
+  const hasY = X.camps.some(c => c.sp_ycut != null);
+  const ccols = [["name", "Кампания", (v, r) => `${esc(v)}<div class="meta">${esc(r.type)} · ${esc(r.status)}</div>`, "l"], ["vc", "Артикул", (v, r) => r.nm ? `<a class="lnk" data-go="${r.nm}">${esc(v || r.nm)}</a>` : "—", "l"],
+    ["sp", "Расход, ₽", N], ...(hasY ? [["sp_ycut", `Вчера к ${t.ycut_at}, ₽`, N]] : []), ["sp_y", "Вчера за день, ₽", N], ["v", "Показы", N], ["ctr", "CTR, %", v => N(v, 2)], ["ao", "Заказы", N],
+    ["cpo", "Цена заказа, ₽", (v, r) => cpoCell(v, r.thr)], ["cpo_y", "Вчера, ₽", (v, r) => cpoCell(v, r.thr), "", "Цена заказа за весь вчерашний день"], ["thr", "Порог, ₽", N], ["flag", "", v => v ? pill(v, "bad") : ""]];
+  const tbl = st.ysub === "camps" ? T("tdcamp", ccols, X.camps, { click: "camp", hint: "щелчок — кампания на вкладке «Реклама»" }) : T("tdnm", ncols, X.nm, { click: "sku", hint: "щелчок — карточка артикула" });
+  return `<div class="row sp"><h1>Сегодня, ${day}</h1><span class="meta">${tzl} · обновлено в ${X.built.slice(11)} · заказы ${fb ? "из аналитики WB (лента WB отстаёт)" : `по ${X.cut} (лента WB отстаёт до часа)`} · реклама на ${X.ads_at} · само обновляется каждый час с 9 до 21 — нажмите F5, чтобы увидеть свежие цифры</span></div>
+    ${stale}<div class="kpis">${kp}</div>${al}${chart}
+    <div class="card"><div class="row sp">${seg("ysub", [["nm", "По артикулам"], ["camps", "По кампаниям"]])}<span class="meta">остальные вкладки — по полному обновлению ${esc(X.full_at || "")}</span></div>${tbl}</div>`;
+};
+
+VIEWS.ads = () => {
+  const subs = seg("asub", [["camps", "Кампании"], ["keys", "Ключи и кластеры"]]);
+  return `<div class="row sp"><h1>Реклама</h1>${subs}</div>` + (st.asub === "keys" ? ADS.keys() : ADS.camps());
+};
+const ADS = {};
+ADS.camps = () => {
+  const all = D.ads || []; let rows = all; const f = st.filters;
+  if (f.atype) rows = rows.filter(c => c.type === f.atype); if (f.astat) rows = rows.filter(c => c.status === f.astat); else rows = rows.filter(c => { const x = campR(c); return c.status !== "завершена" || x.t[2] + x.q[2] >= 100; });
+  const by = {}; all.forEach(c => { const t = by[c.type] = by[c.type] || [0, 0, 0, 0, 0, 0, 0]; campR(c).t.forEach((v, i) => t[i] += v); t[6] += c.assoc_orders; });
+  const types = Object.entries(by).map(([k, t]) => ({ type: k, sp: t[2], views: t[0], ctr: t[0] ? t[1] / t[0] * 100 : null, cpc: t[1] ? t[2] / t[1] : null, orders: t[4], assoc: t[6], cr: t[1] ? t[4] / t[1] * 100 : null, cpo: t[4] ? t[2] / t[4] : null, drr: t[5] ? t[2] / t[5] * 100 : null }));
+  const apps = {}; all.forEach(c => Object.entries(c.apps || {}).forEach(([k, v]) => { const a = apps[k] = apps[k] || [0, 0, 0, 0, 0]; v.forEach((x, i) => a[i] += x); }));
+  const appRows = Object.entries(apps).map(([k, a]) => ({ app: k, sp: a[2], views: a[0], ctr: a[0] ? a[1] / a[0] * 100 : null, cpc: a[1] ? a[2] / a[1] : null, orders: a[3], cpo: a[3] ? a[2] / a[3] : null, drr: a[4] ? a[2] / a[4] * 100 : null }));
+  const c = all.find(x => x.id === st.camp); let det = "";
+  if (c) {
+    const ds = Object.keys(c.daily).sort(); const v = j => ds.map(d => c.daily[d][j]);
+    const pairs = (D.clusters?.sum || []).filter(x => x.aid === c.id); const kr = pairs.flatMap(x => (D.clusters.rows[`${x.aid}|${x.nm}`] || []).map(r => ({ ...r, camp: D.byNm[x.nm]?.vc || x.vc })));
+    det = `<div class="card"><div class="row sp"><h2>«${esc(c.name)}» · ${esc(c.type)} · ${esc(c.status)}</h2><span class="meta">Артикулы: ${c.vcs.map(esc).join(", ")}</span></div>
+    <div class="grid"><div>${line("a1", ds, [{ l: "Расход, ₽", d: v(2), t: "bar", c: "--c4" }, { l: "Заказы", d: v(4), y: "y2" }])}</div><div>${line("a2", ds, [{ l: "CTR, %", d: ds.map(d => c.daily[d][0] ? c.daily[d][1] / c.daily[d][0] * 100 : null) }, { l: "CPO, ₽", d: ds.map(d => c.daily[d][4] ? c.daily[d][2] / c.daily[d][4] : null), y: "y2", c: "--c2" }])}</div></div>
+    ${kr.length ? `<h2>Поисковые кластеры кампании (${kr.length})</h2>${clusterTable(kr, "ckeys", true)}` : `<p class="meta">Поисковых кластеров нет: кампания показывается только в рекомендациях (полки) или неактивна.</p>`}
+    <div class="grid"><div><h2>Ассоциированные заказы (купили другой ваш товар)</h2>${T("assoc", [["vc", "Артикул", vcLink, "l"], ["o", "Заказы", N], ["s", "Сумма, ₽", money]], c.assoc.map(([nm, o, s]) => ({ nm, vc: D.byNm[nm]?.vc || nm, o, s })), { click: "sku" })}</div>
+    <div><h2>Ставки</h2>${T("bids", [["vc", "Артикул", null, "l"], ["s", "Поиск, ₽", money], ["r", "Рекомендации, ₽", money]], Object.entries(c.bids || {}).map(([nm, b]) => ({ vc: D.byNm[nm]?.vc || nm, s: b?.search != null ? b.search / 100 : null, r: b?.recommendations != null ? b.recommendations / 100 : null })))}</div></div></div>`;
+  }
+  const sel = (k, vals, t) => `<select data-f="${k}"><option value="">${t}</option>${vals.map(v => `<option ${f[k] === v ? "selected" : ""}>${esc(v)}</option>`).join("")}</select>`;
+  return `<p class="note">Период ${rgLab().cur} к ${rgLab().prv}. Площадки и ассоциированные заказы — за 30 дней. «Ассоц.» — после клика купили другой ваш товар. CPO = расход / все заказы кампании. Клик по кампании — график, её ключи и ассоциированные заказы.</p>
+  <div class="grid"><div class="card"><h2>По типам</h2>${T("atypes", [["type", "Тип", null, "l"], ["sp", "Расход", money], ["views", "Показы", N], ["ctr", "CTR", v => N(v, 2)], ["cpc", "CPC", v => N(v, 1)], ["orders", "Заказы", N], ["assoc", "ассоц. 30д", N], ["cr", "CR", pct], ["cpo", "CPO", money], ["drr", "ДРР", pct]], types)}</div>
+  <div class="card"><h2>По площадкам (30 дней)</h2>${T("apps", [["app", "Площадка", null, "l"], ["sp", "Расход", money], ["views", "Показы", N], ["ctr", "CTR", v => N(v, 2)], ["cpc", "CPC", v => N(v, 1)], ["orders", "Заказы", N], ["cpo", "CPO", money], ["drr", "ДРР", pct]], appRows)}</div></div>
+  ${det}
+  <div class="card"><div class="row sp"><h2>Кампании</h2><div class="row">${sel("atype", [...new Set(all.map(c => c.type))], "Тип: все")}${sel("astat", ["активна", "пауза", "завершена"], "Статус: все")}</div></div>${campTable(rows, "camps")}</div>`;
+};
+ADS.keys = () => {
+  const S = (D.clusters?.sum || []).map(x => ({ ...x, id: `${x.aid}|${x.nm}`, vcs: D.byNm[x.nm]?.vc || x.vc, tname: { unified: "Единая", search: "Поиск CPM", cpc: "CPC", shelf: "Полки" }[x.type] || x.type, cpo: x.orders ? x.spend / x.orders : null }));
+  if (!st.sort.ksum) S.sort((a, b) => b.waste - a.waste);
+  const tot = S.reduce((a, x) => a + x.spend, 0), w = S.reduce((a, x) => a + x.waste, 0), tl = S.reduce((a, x) => a + (x.tail || 0), 0);
+  const all = Object.entries(D.clusters?.rows || {}).flatMap(([k, rs]) => rs.map(r => ({ ...r, key: k })));
+  const cnt = {}; let csp = {}; all.forEach(r => { cnt[r.v] = (cnt[r.v] || 0) + 1; csp[r.v] = (csp[r.v] || 0) + r.spend; });
+  const pair = S.find(x => x.id === st.pair) || S[0];
+  const prow = pair ? (D.clusters.rows[pair.id] || []) : [];
+  const minus = all.filter(r => r.v === "waste" || r.v === "foreign");
+  return `<div class="callout">Поисковые кластеры WB по каждой кампании × артикулу за ${fmtD(D.clusters?.period?.[0])}–${fmtD(D.clusters?.period?.[1])}: показы, клики, расход, корзины, заказы и средняя позиция. Вердикт: <b>без заказов</b> — расход от 150 ₽ и 0 заказов; <b>хвост</b> — мелкие кластеры до 150 ₽ без заказов (по отдельности копейки, вместе — заметная сумма); <b>чужой аромат</b> — запрос про другой аромат; <b>заказ дороже прибыли</b> — CPO выше 90% прибыли до рекламы; <b>можно поднять ставку</b> — CPO меньше 40% прибыли, а позиция ниже 8; <b>глубокая позиция</b> — средняя позиция дальше 40.</div>
+  <div class="kpis"><div class="kpi"><span class="l">Расход в поиске, 30д</span><span class="v">${N(tot)} ₽</span></div><div class="kpi"><span class="l">Без заказов + чужой аромат</span><span class="v dn">${N(w)} ₽</span><span class="meta">${N(tot ? w / tot * 100 : 0, 1)}%</span></div>
+  <div class="kpi"><span class="l">Всего на кластеры без заказов (с хвостом)</span><span class="v dn">${N(w + tl)} ₽</span><span class="meta">${N(tot ? (w + tl) / tot * 100 : 0, 1)}% расхода в поиске</span></div>
+  ${Object.entries(VERD).map(([k, [t]]) => `<div class="kpi"><span class="l">${t}</span><span class="v">${N(cnt[k] || 0)}</span><span class="meta">${N(csp[k] || 0)} ₽</span></div>`).join("")}</div>
+  <div class="card"><h2>Кампании × артикулы</h2>${T("ksum", [["name", "Кампания", null, "l"], ["vcs", "Артикул", (v, r) => `<a class="lnk" data-go="${r.nm}">${esc(v)}</a>`, "l"], ["tname", "Тип", null, "l"], ["clusters", "Кластеров", N], ["spend", "Расход, ₽", money], ["orders", "Заказы", N], ["cpo", "CPO", money], ["unit_pre", "Приб. до рекл./шт", money], ["waste", "Без заказов, ₽", v => v ? `<b class="dn">${N(v)}</b>` : "—"], ["waste_share", "Доля, %", pct], ["n_waste", "Пустых", N], ["n_foreign", "Чужих", N], ["n_exp", "Дорогих", N], ["n_scale", "Поднять", N]], S, { click: "pair", sel: r => pair && r.id === pair.id, h: 360 })}</div>
+  ${pair ? `<div class="card"><h2>«${esc(pair.name)}» · ${esc(pair.vcs)}</h2>${clusterTable(prow, "kpair")}</div>` : ""}
+  <div class="card"><h2>Кандидаты в минус-фразы по всем кампаниям (${minus.length})</h2><p class="note">Выгрузите CSV и добавьте в минус-фразы соответствующих кампаний.</p>
+  ${T("minus", [["q", "Кластер", null, "l"], ["key", "Кампания · артикул", v => { const x = (D.clusters.sum || []).find(s => `${s.aid}|${s.nm}` === v); return x ? esc(`${x.name} · ${D.byNm[x.nm]?.vc || x.vc}`) : esc(v); }, "l"], ["v", "Причина", v => pill(VERD[v][0], VERD[v][1])], ["views", "Показы", N], ["clicks", "Клики", N], ["spend", "Расход, ₽", money]], minus.sort((a, b) => b.spend - a.spend), { h: 420 })}</div>`;
+};
+
+/* ---------- ПОИСК ---------- */
+VIEWS.search = () => {
+  const items = D.search?.items || {}; const span = st.period === "7" ? "7" : "30";
+  const all = []; Object.entries(items).forEach(([nm, d]) => (d[span] || []).forEach(x => all.push({ ...x, nm: +nm, vc: D.byNm[nm]?.vc || nm })));
+  const kinds = {}; all.forEach(x => { const k = kinds[x.kind] = kinds[x.kind] || { kind: x.kind, n: 0, freq: 0, opens: 0, cart: 0, orders: 0, pos: [] }; k.n++; k.freq += x.freq; k.opens += x.opens; k.cart += x.cart; k.orders += x.orders; k.pos.push(x.pos); });
+  const tot = Object.values(kinds).reduce((a, k) => a + k.orders, 0) || 1;
+  const kr = Object.values(kinds).map(k => ({ ...k, share: k.orders / tot * 100, crc: k.opens ? k.cart / k.opens * 100 : null, cro: k.opens ? k.orders / k.opens * 100 : null, med: median(k.pos) }));
+  const flt = (st.filters.qtext || "").toLowerCase();
+  let rows = all.map(x => ({ ...x, crc: x.opens ? x.cart / x.opens * 100 : null })); if (flt) rows = rows.filter(x => x.q.toLowerCase().includes(flt) || String(x.vc).toLowerCase().includes(flt));
+  if (!st.sort.allq) rows.sort((a, b) => b.freq - a.freq);
+  const qm = {}; all.forEach(x => (qm[x.q] = qm[x.q] || []).push(x));
+  const can = Object.entries(qm).filter(([q, l]) => l.length >= 3).map(([q, l]) => { l.sort((a, b) => a.pos - b.pos); const op = l.reduce((a, x) => a + x.opens, 0); return { q, n: l.length, freq: l[0].freq, cards: l.slice(0, 6).map(x => `${x.vc} (${x.pos})`).join(", "), opens: op, best: op ? l[0].opens / op * 100 : null }; });
+  after(() => { const i = $("#qtext"); if (i) i.oninput = () => { clearTimeout(i._t); i._t = setTimeout(() => { st.filters.qtext = i.value; render(); const j = $("#qtext"); j.focus(); j.setSelectionRange(j.value.length, j.value.length); }, 250); }; });
+  return `<div class="row sp"><h1>Поисковые запросы</h1><div class="row"><input class="inp" id="qtext" placeholder="Фильтр: запрос или артикул" value="${esc(st.filters.qtext || "")}">${seg("period", [["7", "7 дней"], ["30", "30 дней"]])}</div></div>
+  <p class="note">WB «Поисковые запросы по вашим товарам»: топ-30 запросов для ${Object.keys(items).length} карточек с наибольшими заказами. Позиции конкурентов — «Трафик → Где мы отстаём» и «Конкуренты».</p>
+  <div class="card"><h2>По типам запросов</h2>${T("qk", [["kind", "Тип", null, "l"], ["n", "Запросов", N], ["freq", "Частота", N], ["opens", "Переходы", N], ["cart", "Корзины", N], ["orders", "Заказы", N], ["share", "Доля заказов", pct], ["crc", "CR корз.", pct], ["cro", "CR заказ", v => N(v, 2) + "%"], ["med", "Медиана поз.", N]], kr)}</div>
+  <div class="card"><h2>Все запросы</h2>${T("allq", [["q", "Запрос", null, "l"], ["vc", "Карточка", vcLink, "l"], ["kind", "Тип", null, "l"], ["freq", "Частота", N], ["dfreq", "Δ частоты", v => dlt(v, false, "")], ["pos", "Позиция", N], ["dpos", "Δ поз.", v => dlt(v, true, "")], ["opens", "Переходы", N], ["cart", "Корзины", N], ["orders", "Заказы", N], ["crc", "CR корз.", pct]], rows.slice(0, 600), { h: 520 })}</div>
+  <div class="card"><h2>Каннибализация: 3+ ваших карточки на один запрос</h2>${T("can", [["q", "Запрос", null, "l"], ["n", "Карточек", N], ["freq", "Частота", N], ["cards", "Карточки (позиция)", null, "l"], ["opens", "Переходы", N], ["best", "Доля лучшей", pct]], can.sort((a, b) => b.freq - a.freq).slice(0, 40))}</div>`;
+};
+
+/* ---------- СКЛАДЫ ---------- */
+const hash = s => { let h = 5381; for (const c of s) h = ((h << 5) + h + c.charCodeAt(0)) >>> 0; return "w" + h.toString(36); };
+VIEWS.wh = () => {
+  const W = D.wh; if (!W) return `<div class="card">Нет данных по регионам.</div>`;
+  const days = st.whdays || 21, share = st.whshare ?? 50;
+  const mrows = W.matrix.map(r => { const need = W.mdists.reduce((a, d, i) => a + (r["d" + i] || 0), 0) * days * share / 100; return { ...r, need: Math.round(need), gap: Math.round(need - (r.stock_wb || 0)), ...Object.fromEntries(W.mdists.map((d, i) => ["n" + i, Math.round((r["d" + i] || 0) * days * share / 100)])) }; });
+  const shortName = d => d.replace(" федеральный округ", " ФО").replace("Центральный", "Центр.").replace("Приволжский", "Приволж.").replace("Северо-Кавказский", "Сев.-Кавк.").replace("Северо-Западный", "Сев.-Зап.").replace("Дальневосточный", "Дальневост.").replace("Сибирский", "Сибир.").replace("Уральский", "Урал.").replace("Южный", "Южн.");
+  after(() => { ["whdays", "whshare"].forEach(id => { const i = $("#" + id); if (i) i.onchange = () => { st[id] = +i.value; render(); }; }); whStatus(); });
+  return `<h1>Склады и отгрузки</h1>
+  <div class="callout w">Духи — легковоспламеняющаяся жидкость (ЛВЖ): не каждый склад WB их принимает. WB с октября показывает российские склады обезличенно («Склад WB РФ»), поэтому точный список складов для конкретного артикула даёт только метод WB «Опции приёмки», а он недоступен с вашим токеном. Поэтому здесь: спрос по регионам из ленты заказов, план запаса по округам и ваш справочник складов с отметкой «принимает ЛВЖ».</div>
+  <div class="card"><h2>Спрос по регионам, 30 дней</h2>${T("dists", [["dist", "Округ / страна", null, "l"], ["orders", "Заказы", N], ["per_day", "в день", v => N(v, 1)], ["share", "Доля", pct], ["dshare", "Δ доли, п.п.", v => dlt(v, false, " п.п.")], ["fbo", "Со склада WB, %", v => v < 15 ? `<b class="wr">${N(v, 1)}%</b>` : pct(v)], ["cancel", "Отмены, %", pct], ["bp", "Цена покупателя", money], ["spp", "СПП", pct], ["sum", "Сумма, ₽", money]], W.dists)}
+  <p class="note">Доля «со склада WB» — заказы, отгруженные с FBO. В округах с большим спросом и низкой долей FBO доставка идёт с вашего склада (FBS) дольше — это минус к позициям и конверсии в заказ (в сравнениях: у карточек со сборкой 2 дня CR в заказ 38% против 25%).</p></div>
+  <div class="card"><div class="row sp"><h2>План FBO-запаса по округам (топ-40 артикулов)</h2><div class="row"><label class="meta">Дней запаса <input class="inp n" id="whdays" type="number" value="${days}"></label><label class="meta">Доля заказов с FBO, % <input class="inp n" id="whshare" type="number" value="${share}"></label></div></div>
+  <p class="note">Нужно штук = заказы в день в округе × дней запаса × доля FBO. «Не хватает» = нужно всего − текущий остаток на складах WB (по данным воронки). Распределение по складам округа — по вашему справочнику ниже (только склады с отметкой «принимает ЛВЖ»).</p>
+  ${T("whm", [["vc", "Артикул", vcLink, "l"], ["total", "Заказов/день", v => N(v, 1)], ["stock_wb", "Остаток WB", N], ["stock_mp", "Свой склад", N], ["need", "Нужно всего", N], ["gap", "Не хватает", v => v > 0 ? `<b>${N(v)}</b>` : "—"], ...W.mdists.map((d, i) => ["n" + i, shortName(d), N])], mrows, { click: "sku", h: 520 })}</div>
+  <div class="grid"><div class="card"><h2>Справочник складов: принимает ЛВЖ?</h2><p class="note">Отметьте склады, куда у вас принимают духи (видно в ЛК при создании поставки). Отметки сохраняются в пульте.</p><div id="whref">${W.ref.map(([dist, ws]) => `<div><h3 style="margin-top:8px">${esc(shortName(dist))}</h3>${ws.map(w => `<div class="row sp" style="padding:3px 0;border-bottom:1px solid var(--line)"><span>${esc(w)}</span><select data-wh="${hash(w)}"><option value="">не проверено</option><option value="yes">принимает ЛВЖ</option><option value="no">не принимает</option></select></div>`).join("")}</div>`).join("")}</div><span class="meta" id="whst"></span></div>
+  <div class="card"><h2>Тарифы WB (короба)</h2>${T("tar", [["geo", "Регион", null, "l"], ["wh", "Склад", null, "l"], ["fbo_base", "FBO: база ₽", v => N(v, 1)], ["fbo_liter", "FBO: доп. литр", v => N(v, 1)], ["fbo_coef", "FBO коэф. %", N], ["fbs_base", "FBS: база ₽", v => N(v, 1)], ["fbs_coef", "FBS коэф. %", N], ["stor", "Хранение ₽/л/день", v => N(v, 2)]], W.tariffs, { h: 420 })}
+  <p class="note">Российские склады WB теперь тарифицируются едино («Склад WB РФ», коэффициент 170%). Для СНГ — отдельные склады (Ташкент — 100%, Астана — 145%, Ереван — 155%).</p></div></div>
+  <div class="card"><h2>Регионы подробно (топ-60)</h2>${T("regs", [["dist", "Округ", v => esc(shortName(v)), "l"], ["region", "Регион", null, "l"], ["orders", "Заказы 30д", N], ["fbo", "FBO, %", pct], ["cancel", "Отмены, %", pct], ["bp", "Цена покупателя", money], ["spp", "СПП", pct]], W.regions, { h: 420 })}</div>`;
+};
+async function whStatus() {
+  if (GN.on()) return whStatusGH();
+  const db = await cap("db"); const stt = $("#whst"); const sels = document.querySelectorAll("select[data-wh]");
+  const key = id => "wh_" + id;
+  if (!db) { sels.forEach(s => { try { s.value = localStorage.getItem(key(s.dataset.wh)) || ""; } catch (e) {} s.onchange = () => { try { localStorage.setItem(key(s.dataset.wh), s.value); } catch (e) {} if (stt) stt.textContent = "Сохранено в этом браузере"; }; }); return; }
+  try { const snap = await db.collection("wh").get(); const m = {}; snap.docs.forEach(d => { if (d.exists) m[d.id] = d.data()?.v; }); sels.forEach(s => s.value = m[s.dataset.wh] || ""); } catch (e) {}
+  const v = await viewer();
+  if (v.w === false) { sels.forEach(s => s.disabled = true); if (stt) stt.textContent = "Только просмотр: менять статусы складов могут участники с правом редактирования"; return; }
+  sels.forEach(s => s.onchange = async () => { try { await db.doc("wh/" + s.dataset.wh).set({ v: s.value, name: s.closest(".row").firstElementChild.textContent, by: v.id, at: new Date().toISOString() }); if (stt) stt.textContent = "Сохранено — видно всей команде"; } catch (e) { if (stt) stt.textContent = "Не сохранилось: " + (e.code || e.message); } });
+}
+
+/* ---------- СКЛЕЙКИ ---------- */
+VIEWS.glue = () => {
+  const L = rgLab();
+  const rows = (D.glue || []).map(g => { const cs = g.cards.map(n => D.byNm[n]).filter(Boolean).map(s => ({ s, x: PA(s.nm) })).sort((p, q) => q.x.a.orders - p.x.a.orders);
+    const o = cs.reduce((a, y) => a + y.x.a.orders, 0), ob = cs.reduce((a, y) => a + y.x.b.orders * (y.x.b.days ? y.x.a.days / y.x.b.days : 1), 0), sm = cs.reduce((a, y) => a + y.x.a.sum, 0), ad = cs.reduce((a, y) => a + y.x.a.ad_sum, 0), lead = cs[0];
+    return { id: g.id, ncards: cs.length, ndead: cs.filter(y => !y.x.a.orders).length, orders: o, dor: ob ? (o / ob - 1) * 100 : null, share: o && lead ? lead.x.a.orders / o * 100 : null, leadvc: lead?.s.vc, nm: lead?.s.nm,
+      ads: ad, drr: sm ? ad / sm * 100 : null, net: g.net, list: cs.map(y => `${y.s.vc} (${y.x.a.orders})`).join(", ") }; });
+  return `<h1>Склейки</h1><p class="note">По файлу «Связки». Заказы, реклама и доля лидера — за ${L.cur} к ${L.prv}; прибыль — за 30 дней отчёта. «Доля лидера» — сколько заказов склейки даёт главная карточка: ниже 40% — склейке не хватает локомотива.</p>
+  ${T("glue", [["id", "№"], ["ncards", "Карточек", N], ["ndead", "Без заказов", N], ["orders", "Заказы", N], ["dor", "Δ заказов", v => dlt(v)], ["share", "Доля лидера", pct], ["leadvc", "Лидер", (v, r) => vcLink(v, r), "l"], ["ads", "Реклама, ₽", money], ["drr", "ДРР", pct], ["net", "Прибыль 30д", netCls], ["list", "Карточки (заказы)", v => esc(v), "l wrap"]], rows, { click: "sku" })}`;
+};
+
+/* ---------- СРАВНЕНИЕ ЛК ---------- */
+VIEWS.cmp = () => {
+  const sets = D.compare || []; if (!sets.length) return `<h1>Сравнение карточек из ЛК</h1><div class="card"><p>Нет выгрузок. Скачайте «Сравнение карточек» в ЛК за неделю, месяц и квартал, положите архивы в «Загрузки» и скажите Claude «обнови сравнения».</p></div>`;
+  if (st.cmpi == null || st.cmpi >= sets.length) st.cmpi = 0;
+  const c = sets[st.cmpi]; const nms = c.nms.map(String); const me = c.me ? String(c.me) : null;
+  const metrics = ["Заказы/день", "Доля заказов в наборе, %", "Показы/день", "CTR, %", "CR в корзину, %", "CR в заказ, %", "Ср. позиция", "Цена покупателя, ₽", "Доставка, дн"];
+  const rows = []; metrics.forEach(mt => nms.forEach(n => { const v = c.metrics[mt]?.[n] || []; const r = { mt, card: (c.brands[n] || "") + " · " + n.slice(-9), me: n === me }; c.points.forEach((p, i) => r["p" + i] = v[i]); rows.push(r); }));
+  const q = (c.queries || []).map(x => { const M = x["Месяц"] || {}; return { q: x.q, f: x.freq30, pq: (x["Квартал"] || {}).my_pos, pm: M.my_pos, pw: (x["Неделя"] || {}).my_pos, bb: M.best_brand, bp: M.best_pos, mc: M.my_clicks, bc: M.best_clicks, sh: M.my_share }; });
+  after(() => { const s = $("#cmpSel"); if (s) s.onchange = () => { st.cmpi = +s.value; render(); }; });
+  return `<div class="row sp"><h1>Сравнение карточек (выгрузки ЛК)</h1><select id="cmpSel">${sets.map((u, i) => `<option value="${i}" ${i === st.cmpi ? "selected" : ""}>${esc(D.byNm[u.me]?.vc || "без вашей карточки")} против ${u.nms.filter(n => n !== u.me).map(n => (u.brands[n] || n)).join(", ").slice(0, 70)}</option>`).join("")}</select></div>
+  <p class="note">Показы и заказы приведены к дню. «−1» — предыдущий период той же длины.</p>
+  <div class="card">${T("cmpm", [["mt", "Метрика", null, "l"], ["card", "Карточка", null, "l"], ...c.points.map((p, i) => ["p" + i, p, v => N(v, 1)])], rows, { me: r => r.me, h: 640 })}</div>
+  ${me ? `<div class="card"><h2>Поисковые запросы: ваша позиция против лучшего конкурента</h2>${T("cmpq", [["q", "Запрос", null, "l"], ["f", "Частота/30д", N], ["pq", "Ваша поз. квартал", N], ["pm", "месяц", N], ["pw", "неделя", N], ["bb", "Лучший конкурент", null, "l"], ["bp", "Его поз.", N], ["mc", "Ваши переходы", N], ["bc", "Его переходы", N], ["sh", "Ваша доля переходов", pct]], q)}</div>` : ""}`;
+};
+
+/* ---------- РЕКОМЕНДАЦИИ ---------- */
+VIEWS.recs = () => {
+  let r = D.recs || []; const f = st.filters;
+  if (f.rkind) r = r.filter(x => x.kind === f.rkind); if (f.rsev) r = r.filter(x => x.sev === f.rsev);
+  const sel = (k, vals, t, lab = v => v) => `<select data-f="${k}"><option value="">${t}</option>${vals.map(v => `<option value="${v}" ${f[k] === v ? "selected" : ""}>${esc(lab(v))}</option>`).join("")}</select>`;
+  const cnt = {}; (D.recs || []).forEach(x => cnt[x.kind] = (cnt[x.kind] || 0) + 1);
+  return `<div class="row sp"><h1>Рекомендации (${(D.recs || []).length})</h1><div class="row">${sel("rkind", Object.keys(cnt), "Тип: все", v => `${v} (${cnt[v]})`)}${sel("rsev", ["high", "mid", "low"], "Важность: все", v => ({ high: "срочно", mid: "важно", low: "можно позже" }[v]))}</div></div>
+  <p class="note">Правила пересчитываются при каждом обновлении данных. У каждой — цифры-основание. Клик по артикулу — его разбор.</p>
+  <div class="card">${r.map(recHtml).join("") || '<p class="meta">Нет рекомендаций</p>'}</div>`;
+};
+
+/* ---------- РНП: ежедневный контроль, свёртка в недели и месяцы ---------- */
+const LZ = {};
+function need(names) {
+  const miss = names.filter(n => !(n in D)); if (!miss.length) return true;
+  const key = miss.join(); if (!LZ[key]) LZ[key] = Promise.all(miss.map(async n => { try { D[n] = await getData(n); } catch (e) { D[n] = null; } })).then(render);
+  return false;
+}
+const MONS = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"], WDS = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
+const addD = (d, k) => new Date(Date.parse(d + "T00:00:00Z") + k * 864e5).toISOString().slice(0, 10);
+const dimOf = m => new Date(Date.UTC(+m.slice(0, 4), +m.slice(5, 7), 0)).getUTCDate();
+const wdOf = d => WDS[new Date(d + "T00:00:00Z").getUTCDay()];
+let DIX = null; const dIdx = () => DIX || (DIX = Object.fromEntries(D.meta.dates.map((d, i) => [d, i])));
+function buckets(dates, gran, from, to) {
+  const B = [], M = {};
+  dates.forEach((d, i) => { if ((from && d < from) || (to && d > to)) return; const k = gran === "d" ? d : gran === "w" ? mon(d) : d.slice(0, 7); if (!M[k]) B.push(M[k] = { k, ix: [] }); M[k].ix.push(i); });
+  B.forEach(b => { b.days = b.ix.length;
+    if (gran === "d") { b.lab = fmtD(b.k); b.sub = wdOf(b.k); b.full = true; b.we = b.sub === "сб" || b.sub === "вс"; }
+    else if (gran === "w") { b.lab = `${fmtD(b.k)}–${fmtD(addD(b.k, 6))}`; b.full = b.days === 7; b.sub = b.full ? "" : `${b.days} дн`; }
+    else { b.lab = `${MONS[+b.k.slice(5, 7) - 1]} ${b.k.slice(2, 4)}`; b.full = b.days === dimOf(b.k); b.sub = b.full ? "" : `${b.days} дн`; } });
+  return B;
+}
+const visB = dates => { const R = RG(); return buckets(dates, st.gran, R.a, R.b); };
+const allOf = B => ({ k: "all", ix: B.flatMap(b => b.ix), full: true, days: B.reduce((a, b) => a + b.days, 0) });
+const f1 = v => N(v, 1), fctr = v => N(v, 2) + "%";
+
+/* ---------- выбранный период и сравнение ---------- */
+const PRESETS = [["1", "Вчера"], ["2", "Последние 2 дня"], ["7", "7 дней"], ["14", "14 дней"], ["30", "30 дней"], ["90", "90 дней"], ["wk", "Прошлая неделя (пн–вс)"], ["mtd", "Этот месяц"], ["mo", "Прошлый месяц"], ["c", "Свои даты"]];
+const PTABS = new Set(["overview", "rnp", "unit", "sku", "ads", "glue"]);
+const PCTS = new Set(["crc", "cro", "crt", "ctr", "adsh", "drr", "spp", "rent", "roi", "bpct", "f_rent", "cr"]);
+let RGC = null, RGK = "";
+function RG() {
+  const ds = D.meta?.dates || [], last = ds.length - 1, pp = st.pp || "7";
+  const key = [pp, st.pa, st.pb, st.pc, last].join("|"); if (RGC && RGK === key) return RGC;
+  const ix = d => { const i = ds.indexOf(d); return i < 0 ? null : i; };
+  let ia, ib;
+  if (pp === "c") { ia = ix(st.pa) ?? Math.max(0, last - 6); ib = ix(st.pb) ?? last; if (ia > ib) [ia, ib] = [ib, ia]; }
+  else if (pp === "wk") { ib = last; while (ib > 0 && new Date(ds[ib] + "T00:00:00Z").getUTCDay() !== 0) ib--; ia = Math.max(0, ib - 6); }
+  else if (pp === "mtd") { ib = last; ia = Math.max(0, ds.findIndex(d => d.startsWith(ds[last].slice(0, 7)))); }
+  else if (pp === "mo") { ib = ds.findIndex(d => d.startsWith(ds[last].slice(0, 7))) - 1; if (ib < 0) ib = last; ia = Math.max(0, ds.findIndex(d => d.startsWith(ds[ib].slice(0, 7)))); }
+  else { ib = last; ia = Math.max(0, last - (+pp || 7) + 1); }
+  const len = ib - ia + 1, sh = st.pc === "wk" ? 7 * Math.ceil(len / 7) : len, pia = ia - sh, pib = ib - sh;
+  const at = i => i >= 0 ? ds[i] : addD(ds[0], i);
+  RGK = key; return RGC = { ia, ib, len, pia, pib, a: ds[ia], b: ds[ib], pa: at(pia), pb: at(pib), partial: pia < 0, plen: Math.max(0, pib - Math.max(pia, 0) + 1) };
+}
+const ixR = (a, b) => { const o = []; for (let i = Math.max(0, a); i <= b; i++) o.push(i); return o; };
+const curB = () => { const R = RG(); return { k: "cur", ix: ixR(R.ia, R.ib), full: true, days: R.len }; };
+const prvB = () => { const R = RG(); const ix = ixR(R.pia, R.pib); return { k: "prv", ix, full: !R.partial, days: ix.length }; };
+const cmpB = dates => { const R = RG(), ix = [], keys = new Set(); dates.forEach((d, i) => { if (d >= R.pa && d <= R.pb) { ix.push(i); keys.add(st.gran === "w" ? mon(d) : d.slice(0, 7)); } }); return { k: "all", ix, full: !R.partial, days: ix.length, keys: [...keys] }; };
+const rgLab = () => { const R = RG(), f = (a, b) => a === b ? fmtD(a) : `${fmtD(a)}–${fmtD(b)}`; return { cur: f(R.a, R.b), prv: f(R.pa, R.pb) + (R.partial ? " (неполный)" : "") }; };
+const SUMK = ["opens", "cart", "orders", "sum", "buyouts", "cancel", "ad_sum", "ad_views", "ad_clicks", "ad_orders"];
+let PAC = {}, PAK = "";
+function PA(nm) {
+  const R = RG(); if (PAK !== RGK) { PAC = {}; PAK = RGK; } if (PAC[nm]) return PAC[nm];
+  const S = D.series?.[nm] || {};
+  const agg = (a, b) => { const o = { days: 0 }; SUMK.forEach(k => o[k] = 0); let w = 0, p = 0, bp = 0, sp = 0;
+    for (let i = Math.max(0, a); i <= b; i++) { o.days++; SUMK.forEach(k => o[k] += S[k]?.[i] || 0); const q = S.orders?.[i] || 0, pr = S.price?.[i];
+      if (pr && q) { w += q; p += pr * q; bp += (S.bprice?.[i] || 0) * q; sp += (S.spp?.[i] || 0) * q; } }
+    if (w) { o.price = p / w; o.bprice = bp / w; o.spp = sp / w; } return o; };
+  return PAC[nm] = { a: agg(R.ia, R.ib), b: agg(R.pia, R.pib) };
+}
+const Pd = (a, b, k) => a && b && b[k] && b.days && a.days ? ((a[k] / a.days) / (b[k] / b.days) - 1) * 100 : null;
+function relChg(m, a, b, cb, pb) {
+  if (a == null || b == null || !isFinite(a) || !isFinite(b)) return null; let x = a, y = b;
+  if (st.pd !== "day" && (m.k === "sum" || m.k === "fact") && cb?.days && pb?.days && cb.days !== pb.days) { x = a / cb.days; y = b / pb.days; }
+  return y ? (x - y) / Math.abs(y) * 100 : null;
+}
+const dltc = (v, b, u) => v == null || !isFinite(v) ? "" : `<span class="d ${!b || Math.abs(v) < 0.05 ? "" : (v > 0) === (b > 0) ? "up" : "dn"}">${v > 0 ? "+" : ""}${N(v, Math.abs(v) < 10 ? 1 : 0)}${u}</span>`;
+function chg(m, a, b, cb, pb) {
+  if (a == null || b == null) return "";
+  if (PCTS.has(m.id)) return dltc(a - b, m.b, " п.п.");
+  return dltc(relChg(m, a, b, cb, pb), m.b, "%");
+}
+function mvs(m, X, b, F) { const k = st.pd; st.pd = "sum"; const v = mval(m, X, b, F); st.pd = k; return v; }
+function pkHtml(nms) {
+  const X = base(nms), c = curB(), p = prvB();
+  return [["Заказы, шт", "orders"], ["Заказы, ₽", "sum"], ["Переходы", "opens"], ["Переход → заказ", "crt"], ["Реклама, ₽", "ad_sum"], ["ДРР", "drr"], ["Прибыль (оценка), ₽", "prof"], ["Рентабельность", "rent"], ["СПП", "spp"], ["Цена покупателя, ₽", "bprice"]]
+    .map(([l, id]) => { const m = RMI[id], a = mvs(m, X, c), b = mvs(m, X, p); return `<div class="kpi"><span class="l">${l}</span><span class="v">${a == null ? "—" : (m.f || N)(a)}</span><span class="meta">было ${b == null ? "—" : (m.f || N)(b)} ${chg(m, a, b, c, p)}</span></div>`; }).join("");
+}
+function decomp(a, b) {
+  if (!(a?.orders && b?.orders && a.opens && b.opens && a.cart && b.cart)) return null;
+  const ka = 1 / a.days, kb = 1 / b.days, O1 = a.orders * ka, O0 = b.orders * kb, dO = (O1 - O0) * a.days;
+  if (O1 === O0) return { opens: 0, cr_cart: 0, cr_order: 0 };
+  const lr = Math.log(O1 / O0), pt = { opens: Math.log(a.opens * ka / (b.opens * kb)), cr_cart: Math.log((a.cart / a.opens) / (b.cart / b.opens)), cr_order: Math.log((a.orders / a.cart) / (b.orders / b.cart)) };
+  const o = {}; for (const k in pt) o[k] = Math.round(pt[k] / lr * dO); return o;
+}
+function pbar() {
+  const el = $("#pbar"); if (!el || !D.meta) return; el.style.display = st.tab === "today" ? "none" : ""; if (st.tab === "today") return; const R = RG(), L = rgLab(), ds = D.meta.dates;
+  el.innerHTML = `<label class="meta">Период <select id="ppSel">${PRESETS.map(([v, t]) => `<option value="${v}" ${String(st.pp || "7") === v ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+    ${st.pp === "c" ? `<input type="date" class="inp" id="paIn" min="${ds[0]}" max="${ds.at(-1)}" value="${R.a}"><span class="meta">—</span><input type="date" class="inp" id="pbIn" min="${ds[0]}" max="${ds.at(-1)}" value="${R.b}">` : ""}
+    <label class="meta">сравнить с <select id="pcSel"><option value="prev" ${st.pc !== "wk" ? "selected" : ""}>предыдущим периодом</option><option value="wk" ${st.pc === "wk" ? "selected" : ""}>теми же днями недели раньше</option></select></label>
+    <span class="meta"><b>${L.cur}</b> · ${R.len} дн. к ${L.prv}${PTABS.has(st.tab) ? "" : " · в этом разделе свой период"}</span>`;
+  $("#ppSel").onchange = e => { st.pp = e.target.value; if (st.pp === "c" && !st.pa) { st.pa = R.a; st.pb = R.b; } save(); render(); };
+  $("#pcSel").onchange = e => { st.pc = e.target.value; save(); render(); };
+  const sa = $("#paIn"), sb = $("#pbIn");
+  if (sa) sa.onchange = () => { if (sa.value) { st.pa = sa.value; save(); render(); } };
+  if (sb) sb.onchange = () => { if (sb.value) { st.pb = sb.value; save(); render(); } };
+}
+const RM = [
+  { id: "opens", s: "Воронка", l: "Переходы в карточку", k: "sum", b: 1 },
+  { id: "cart", l: "Добавления в корзину", k: "sum", b: 1 },
+  { id: "crc", l: "Конверсия в корзину, %", k: "ratio", num: "cart", den: "opens", mul: 100, f: pct, b: 1 },
+  { id: "orders", l: "Заказы, шт", k: "sum", b: 1, bold: 1 },
+  { id: "cro", l: "Конверсия корзина → заказ, %", k: "ratio", num: "orders", den: "cart", mul: 100, f: pct, b: 1 },
+  { id: "crt", l: "Конверсия переход → заказ, %", k: "ratio", num: "orders", den: "opens", mul: 100, f: v => N(v, 2) + "%", b: 1 },
+  { id: "sum", l: "Заказы, ₽", k: "sum", f: money, b: 1, bold: 1 },
+  { id: "cancel", l: "Отмены, шт", k: "sum", b: -1 },
+  { id: "buyouts", l: "Выкупы из заказов дня, шт (дозревают ~2 недели)", k: "sum", b: 1 },
+  { id: "bsum", l: "Выкупы из заказов дня, ₽", k: "sum", f: money, b: 1 },
+  { id: "bpct", l: "Выкуп заказов дня, % (свежие дни ещё не выкуплены)", k: "ratio", num: "buyouts", den: "orders", mul: 100, f: pct, b: 1 },
+  { id: "wish", l: "Добавили в избранное", k: "sum", b: 1 },
+  { id: "price", s: "Цена", l: "Цена продавца, ₽", k: "wavg", num: "psum", den: "pw", f: money, b: 0 },
+  { id: "bprice", l: "Цена для покупателя, ₽", k: "wavg", num: "bpsum", den: "pw", f: money, b: 0 },
+  { id: "spp", l: "СПП, %", k: "wavg", num: "sppsum", den: "pw", f: pct, b: 1 },
+  { id: "ad_views", s: "Реклама", l: "Показы рекламы", k: "sum", b: 1 },
+  { id: "ad_clicks", l: "Клики по рекламе", k: "sum", b: 1 },
+  { id: "ctr", l: "CTR, %", k: "ratio", num: "ad_clicks", den: "ad_views", mul: 100, f: fctr, b: 1 },
+  { id: "cpc", l: "CPC, ₽", k: "ratio", num: "ad_sum", den: "ad_clicks", f: f1, b: -1 },
+  { id: "cpm", l: "CPM, ₽", k: "ratio", num: "ad_sum", den: "ad_views", mul: 1000, f: money, b: -1 },
+  { id: "ad_sum", l: "Расход, ₽", k: "sum", f: money, b: 0, bold: 1 },
+  { id: "ad_orders", l: "Заказы с рекламы (атрибуция WB)", k: "sum", b: 1 },
+  { id: "adsh", l: "Доля рекламных заказов, %", k: "ratio", num: "ad_orders", den: "orders", mul: 100, f: pct, b: 0 },
+  { id: "cpo", l: "CPO (расход / рекл. заказ), ₽", k: "ratio", num: "ad_sum", den: "ad_orders", f: money, b: -1 },
+  { id: "drr", l: "ДРР от всех заказов, %", k: "ratio", num: "ad_sum", den: "sum", mul: 100, f: pct, b: -1, bold: 1 },
+  { id: "mp_t10", s: "Поиск (только для артикула)", l: "Ключей в топ-10 (MPSTATS)", k: "avg", f: f1, b: 1, nmOnly: 1 },
+  { id: "mp_pos", l: "Позиция: среднее по 10 главным ключам", k: "avg", b: -1, nmOnly: 1 },
+  { id: "mp_vis", l: "Видимость в поиске, MPSTATS", k: "avg", b: 1, nmOnly: 1 },
+  { id: "mp_trf", l: "Трафик из поиска, оценка MPSTATS", k: "sum", b: 1, nmOnly: 1 },
+  { id: "wb_so", l: "Заказы по 30 главным запросам (WB)", k: "sum", b: 1, nmOnly: 1 },
+  { id: "wb_sp", l: "Средняя позиция по этим запросам (WB)", k: "avg", f: f1, b: -1, nmOnly: 1 },
+  { id: "rev_e", s: "Экономика — оценка по заказам дня", l: "Выручка с учётом выкупа, ₽", k: "sum", f: money, b: 1 },
+  { id: "wbk", l: "Удержания WB (комиссия, эквайринг), ₽", k: "sum", f: money, b: -1 },
+  { id: "logi", l: "Логистика, хранение, штрафы, ₽", k: "sum", f: money, b: -1 },
+  { id: "cogs", l: "Себестоимость, ₽", k: "sum", f: money, b: -1 },
+  { id: "taxi", l: "Налоги и косвенные 10%, ₽", k: "sum", f: money, b: -1 },
+  { id: "pre", l: "Прибыль до рекламы, ₽", k: "sum", f: netCls, b: 1 },
+  { id: "ad_sum2", src: "ad_sum", l: "Реклама, ₽", k: "sum", f: money, b: -1 },
+  { id: "prof", l: "Прибыль, ₽", k: "sum", f: netCls, b: 1, bold: 1 },
+  { id: "rent", l: "Рентабельность продаж, %", k: "ratio", num: "prof", den: "rev_e", mul: 100, f: pct, b: 1, bold: 1 },
+  { id: "pro1", l: "Прибыль на заказ, ₽", k: "ratio", num: "prof", den: "orders", f: netCls, b: 1 },
+  { id: "roi", l: "ROI на себестоимость, %", k: "ratio", num: "prof", den: "cogs", mul: 100, f: pct, b: 1 },
+  { id: "f_q", s: "Факт отчёта реализации WB (недели и месяцы)", l: "Продажи по отчёту, шт", k: "fact", j: 0, b: 1 },
+  { id: "f_sp", l: "Выручка по отчёту (цена продавца), ₽", k: "fact", j: 1, f: money, b: 1 },
+  { id: "f_pay", l: "К перечислению, ₽", k: "fact", j: 2, f: money, b: 1 },
+  { id: "f_oth", l: "Логистика, хранение, штрафы, ₽", k: "fact", j: 3, f: money, b: -1 },
+  { id: "f_net", l: "Прибыль по отчёту, ₽", k: "fact", j: 5, f: netCls, b: 1, bold: 1 },
+  { id: "f_rent", l: "Рентабельность по отчёту, %", k: "factr", f: pct, b: 1 }];
+const RMI = Object.fromEntries(RM.map(m => [m.id, m]));
+const BASEK = ["opens", "cart", "orders", "sum", "cancel", "buyouts", "bsum", "wish", "ad_sum", "ad_views", "ad_clicks", "ad_orders"];
+function scopeNms() {
+  const s = D.byNm[st.nm]; if (st.scope === "shop") return D.order.slice();
+  if (st.scope === "glue" && s) { const g = (D.glue || []).find(x => x.id === s.glue); return g ? g.cards.filter(n => D.byNm[n]) : (D.sku || []).filter(x => x.imt === s.imt).map(x => x.nm); }
+  return [st.nm];
+}
+function base(nms) {
+  const n = D.meta.dates.length, X = {}, R = D.rnp || {}, ind = R.model?.indirect ?? 0.1;
+  [...BASEK, "psum", "bpsum", "sppsum", "pw", "rev_e", "wbk", "logi", "cogs", "taxi", "prof", "pre"].forEach(k => X[k] = new Array(n).fill(null));
+  const add = (k, i, v) => { if (v == null || isNaN(v)) return; X[k][i] = (X[k][i] || 0) + v; };
+  nms.forEach(nm => { const S = D.series?.[nm]; if (!S) return; const p = R.par?.[nm];
+    for (let i = 0; i < n; i++) {
+      BASEK.forEach(k => add(k, i, S[k]?.[i]));
+      const q = S.orders?.[i] || 0, pr = S.price?.[i];
+      if (pr && q) { add("psum", i, pr * q); add("bpsum", i, (S.bprice?.[i] || 0) * q); add("sppsum", i, (S.spp?.[i] || 0) * q); add("pw", i, q); }
+      if (p && S.orders?.[i] != null && (S.opens?.[i] != null || q)) {
+        const rv = (S.sum?.[i] || 0) * p.b, qb = q * p.b, c = p.c || 0;
+        add("rev_e", i, rv); add("wbk", i, rv * p.w); add("logi", i, qb * (p.l + p.o)); add("cogs", i, qb * c); add("taxi", i, rv * (p.t + ind));
+        const pre = rv * (1 - p.w - p.t - ind) - qb * (p.l + p.o + c); add("pre", i, pre); add("prof", i, pre - (S.ad_sum?.[i] || 0)); } } });
+  return X;
+}
+function kwRows(nm, X) {
+  const n = D.meta.dates.length, DI = dIdx(); ["mp_t10", "mp_pos", "mp_vis", "mp_trf", "wb_so", "wb_sp"].forEach(k => X[k] = new Array(n).fill(null));
+  const K = D.kw?.own?.[nm];
+  if (K) (D.kw.dates || []).forEach((d, j) => { const i = DI[d]; if (i == null) return;
+    const all = K.p.map(a => a[j]); if (!all.some(v => v > 0)) return;
+    const top = all.slice(0, 10).filter(v => v > 0); X.mp_pos[i] = top.length ? top.reduce((a, b) => a + b, 0) / top.length : null;
+    X.mp_t10[i] = all.filter(v => v > 0 && v <= 10).length; X.mp_vis[i] = K.it?.vis?.[j] ?? null; X.mp_trf[i] = K.it?.trf?.[j] ?? null; });
+  const W = D.kw?.wb?.nm?.[nm];
+  if (W) (D.kw.wb.dates || []).forEach((d, j) => { const i = DI[d], t = W.tot[j]; if (i == null || !t) return; X.wb_sp[i] = t[0] || null; X.wb_so[i] = t[1] ?? null; });
+}
+function factMap(nms) {
+  const F = {}; if (st.gran === "d") return F;
+  nms.forEach(nm => Object.entries(D.rnp?.fact?.[nm] || {}).forEach(([w, a]) => { const k = st.gran === "w" ? mon(w) : w.slice(0, 7); const t = F[k] = F[k] || [0, 0, 0, 0, 0, 0]; a.forEach((v, j) => t[j] += v); }));
+  return F;
+}
+function mval(m, X, b, F) {
+  const sm = k => { let s = 0, c = 0; for (const i of b.ix) { const v = X[k]?.[i]; if (v != null) { s += v; c++; } } return c ? { s, c } : null; };
+  if (m.k === "sum") { const r = sm(m.src || m.id); return r ? (st.pd === "day" ? r.s / r.c : r.s) : null; }
+  if (m.k === "ratio" || m.k === "wavg") { const a = sm(m.num), c = sm(m.den); return a && c && c.s ? a.s / c.s * (m.mul || 1) : null; }
+  if (m.k === "avg") { const r = sm(m.id); return r ? r.s / r.c : null; }
+  if (!F) return null;
+  const keys = b.k === "all" ? Object.keys(F).filter(k => b.keys?.includes(k)) : [b.k];
+  const t = [0, 0, 0, 0, 0, 0]; let any = false; keys.forEach(k => { if (F[k]) { any = true; F[k].forEach((v, j) => t[j] += v); } });
+  if (!any) return null; if (m.k === "factr") return t[1] ? t[5] / t[1] * 100 : null;
+  return st.pd === "day" ? t[m.j] / (b.days || 7) : t[m.j];
+}
+function dcls(m, v, pv, b, pb) {
+  if (v == null || pv == null || !m.b) return "";
+  if (st.pd !== "day" && (m.k === "sum" || m.k === "fact") && (!b.full || !pb.full)) return "";
+  const ch = pv === 0 ? (v > 0 ? 1 : v < 0 ? -1 : 0) : (v - pv) / Math.abs(pv); if (Math.abs(ch) < 0.03) return "";
+  const g = ch * m.b; return (g > 0 ? "cu" : "cd") + (Math.abs(ch) >= 0.15 ? "2" : "1");
+}
+const fmtM = (m, v) => v == null || !isFinite(v) ? "—" : (st.pd === "day" && (m.k === "sum" || m.k === "fact") && Math.abs(v) < 100 ? N(v, 1) : (m.f || N)(v));
+function rnpTable(rows, B, X, F, opt = {}) {
+  const head = `<tr><th class="l">${opt.first || "Показатель"}</th>${B.map(b => `<th class="${b.we ? "we" : ""}">${b.lab}${b.sub ? `<br><span class="meta">${b.sub}</span>` : ""}</th>`).join("")}<th class="tot">${st.pd === "day" ? "В среднем за день" : "Итого за период"}</th><th class="tot">Пред. период<br><span class="meta">${rgLab().prv}</span></th><th class="tot">Δ</th></tr>`;
+  const all = { ...allOf(B), keys: B.map(b => b.k) }, pb = opt.pb || cmpB(D.meta.dates);
+  let sec = null, body = "";
+  rows.forEach(m => {
+    if (m.s && m.s !== sec) { sec = m.s; body += `<tr class="sec"><td>${m.s}</td><td colspan="${B.length + 3}"></td></tr>`; }
+    const vals = B.map(b => mval(m, X, b, F)); if (vals.every(v => v == null) && opt.hideEmpty !== false) return;
+    body += `<tr class="click${st.rrow === m.id ? " sel" : ""}${m.bold ? " bold" : ""}" data-row="${m.id}"><td>${m.l}</td>` +
+      vals.map((v, j) => { const c = j ? dcls(m, v, vals[j - 1], B[j], B[j - 1]) : ""; const t = j && v != null && vals[j - 1] ? ` title="к предыдущему: ${N((v / vals[j - 1] - 1) * 100, 1)}%"` : "";
+        return `<td class="${c}${B[j].we ? " we" : ""}"${t}>${fmtM(m, v)}</td>`; }).join("") + (() => { const tv = mval(m, X, all, F), pv = mval(m, X, pb, F); return `<td class="tot">${fmtM(m, tv)}</td><td class="tot">${fmtM(m, pv)}</td><td class="tot">${chg(m, tv, pv, all, pb)}</td></tr>`; })();
+  });
+  const tid = opt.id || "rnptab"; TBL[tid] = { cols: [["l", "Показатель"], ...B.map((b, j) => ["c" + j, b.lab]), ["tot", "Итого"], ["prev", "Пред. период"]],
+    rows: rows.map(m => { const r = { l: m.l }; B.forEach((b, j) => { const v = mval(m, X, b, F); r["c" + j] = v == null ? "" : Math.round(v * 100) / 100; }); const t = mval(m, X, all, F); r.tot = t == null ? "" : Math.round(t * 100) / 100; const q = mval(m, X, pb, F); r.prev = q == null ? "" : Math.round(q * 100) / 100; return r; }) };
+  return `<div class="row sp"><span class="meta">${rows.length} показателей · клик по строке — на график</span><button class="btn" data-csv="${tid}">CSV</button></div>
+  <div class="tw rnp" data-end="1" style="max-height:${opt.h || 680}px"><table>${`<thead>${head}</thead>`}<tbody>${body}</tbody></table></div>`;
+}
+function rnpChart(id, m, B, X, F, extra) {
+  const vals = B.map(b => mval(m, X, b, F)); const bar = m.k === "sum" || m.k === "fact";
+  const sets = [{ l: m.l, d: vals, t: bar ? "bar" : "line", c: "--c1" }];
+  if (extra) sets.push({ l: extra.l, d: B.map(b => mval(extra, X, b, F)), y: "y2", c: "--c2" });
+  return line(id, B.map(b => b.lab), sets, { h: 210, zero: !(m.id.includes("pos") || m.id === "wb_sp"), rev: m.id.includes("pos") || m.id === "wb_sp" });
+}
+const rnpCtl = () => `<div class="row">${seg("rsub", [["nm", "Артикул"], ["all", "Все артикулы"], ["ads", "Реклама"], ["keys", "Ключи и позиции"]])}
+  ${seg("gran", [["d", "Дни"], ["w", "Недели"], ["m", "Месяцы"]])}
+  ${st.rsub !== "keys" ? seg("pd", [["sum", "Сумма"], ["day", "В день"]]) : ""}</div>`;
+VIEWS.rnp = () => {
+  if (!need(["rnp", "kw", "clday"])) return `<div class="empty">Загружаю РНП…</div>`;
+  st.gran = st.gran || "d"; st.rsub = st.rsub || "nm"; st.pd = st.pd || "sum";
+  const body = st.rsub === "all" ? rnpAll() : st.rsub === "ads" ? rnpAds() : st.rsub === "keys" ? rnpKeys() : rnpNm();
+  return `<div class="row sp"><h1>РНП — рука на пульсе</h1><span class="meta">клетки: <span class="pill p-good">лучше</span> <span class="pill p-bad">хуже</span> предыдущего периода</span></div>${rnpCtl()}${body}`;
+};
+function rnpNm() {
+  const s = D.byNm[st.nm]; if (!s) return `<div class="card">Выберите артикул в поиске сверху.</div>`;
+  st.scope = st.scope || "nm"; const nms = scopeNms(); const X = base(nms); if (st.scope === "nm") kwRows(st.nm, X);
+  const B = visB(D.meta.dates), F = factMap(nms), all = { ...allOf(B), keys: B.map(b => b.k) }, pb = cmpB(D.meta.dates), L = rgLab();
+  const rows = RM.filter(m => (st.scope === "nm" || !m.nmOnly) && (st.gran !== "d" || !m.k.startsWith("fact")));
+  const m = RMI[st.rrow] || RMI.orders;
+  const p = D.rnp?.par?.[st.nm]; const glue = (D.glue || []).find(g => g.id === s.glue);
+  const ttl = st.scope === "shop" ? "Весь кабинет" : st.scope === "glue" ? `Склейка ${glue ? "№" + glue.id : ""}: ${nms.length} карточек` : `${esc(s.vc)} · ${s.nm}`;
+  return `<div class="row">${seg("scope", [["nm", "Артикул"], ["glue", "Его склейка"], ["shop", "Весь кабинет"]])}<span class="meta">${st.scope === "nm" ? `← → — соседний артикул · <a class="lnk" data-go="${s.nm}">карточка артикула</a> · <a class="lnk" data-set="rsub=ads&anm=nm&rcamp=">его реклама по дням</a> · <a class="lnk" data-set="rsub=keys">его ключи и позиции</a>` : ""}</span></div>
+  <div class="card"><div class="row sp"><h2>${ttl}</h2><span class="meta">${L.cur} к ${L.prv}</span></div>
+  <div class="kpis">${[["Заказы, шт", "orders"], ["Заказы, ₽", "sum"], ["Прибыль (оценка), ₽", "prof"], ["Рентабельность", "rent"], ["ДРР", "drr"], ["Переход → заказ", "crt"], ["Доля рекл. заказов", "adsh"], ["СПП", "spp"]]
+    .map(([l, id]) => { const mm = RMI[id], a = mval(mm, X, all, F), b = mval(mm, X, pb, F); return `<div class="kpi"><span class="v">${fmtM(mm, a)}</span><span class="l">${l}</span><span class="meta">было ${fmtM(mm, b)} ${chg(mm, a, b, all, pb)}</span></div>`; }).join("")}</div>
+  <div class="row sp"><span class="meta">График: <b>${m.l}</b> — клик по строке таблицы меняет показатель</span></div>
+  ${rnpChart("rnpc", m, B, X, F, m.id !== "prof" && m.k === "sum" ? RMI.prof : null)}
+  ${rnpTable(rows, B, X, F)}
+  <p class="note">Экономика по дням — оценка по заказам дня: заказы × выкуп${p && st.scope === "nm" ? ` (${N(p.b * 100, 1)}%)` : ""} × (цена − удержания WB${p && st.scope === "nm" ? ` ${N(p.w * 100, 1)}%` : ""} − налоги и косвенные) − логистика${p && st.scope === "nm" ? ` ${N(p.l)} ₽` : ""} − себестоимость${p && st.scope === "nm" ? ` ${N(p.c)} ₽${p.cest ? " (нет в файле — взята медиана)" : ""}` : ""} на выкупленную штуку − реклама дня.
+  Ставки взяты ${p && st.scope === "nm" ? p.src : "по каждому артикулу из факта последних 5 недель"} отчёта реализации. Факт отчёта показан в режимах «Недели» и «Месяцы»: он считается по датам продаж, поэтому расходится с оценкой по заказам на 1–2 недели. Неполные недели и месяцы в режиме «Сумма» не подсвечиваются — переключите на «В день», чтобы сравнить честно.</p></div>`;
+}
+function rnpAll() {
+  const opts = RM.filter(m => st.gran !== "d" || !m.k.startsWith("fact")); const m = RMI[st.rmet] || RMI.orders;
+  const B = visB(D.meta.dates); const all = { ...allOf(B), keys: B.map(b => b.k) }, pb = cmpB(D.meta.dates);
+  const top = st.rtop || "50"; const nms = top === "all" ? D.order : D.order.slice(0, +top);
+  const rows0 = nms.map(nm => { const s = D.byNm[nm]; const X = base([nm]); if (m.nmOnly) kwRows(nm, X); const F = factMap([nm]);
+    const r = { nm, vc: s.vc, aroma: s.aroma || "—", abc: s.abc || "—" }; const vals = B.map(b => mval(m, X, b, F));
+    vals.forEach((v, j) => { r["c" + j] = v; r["k" + j] = j ? dcls(m, v, vals[j - 1], B[j], B[j - 1]) : ""; });
+    r.tot = mval(m, X, all, F); r.prev = mval(m, X, pb, F); r.dl = relChg(m, r.tot, r.prev, all, pb); return r; });
+  const flt = st.rflt || "all", good = d => d != null && d * (m.b || 1) >= 10, bad = d => d != null && d * (m.b || 1) <= -10;
+  const rows = rows0.filter(r => flt === "dn" ? bad(r.dl) : flt === "up" ? good(r.dl) : true);
+  const cols = [["vc", "Артикул", (v, r) => esc(v), "l"], ["aroma", "Аромат", null, "l"], ["abc", "ABC", abcPill]];
+  B.forEach((b, j) => cols.push(["c" + j, `${b.lab}${b.sub ? `<br><span class="meta">${b.sub}</span>` : ""}`, (v, r) => `<div class="hm ${r["k" + j]}">${fmtM(m, v)}</div>`, b.we ? "we" : ""]));
+  cols.push(["tot", st.pd === "day" ? "В день" : "Итого", v => fmtM(m, v), "tot"], ["prev", "Пред. период", v => fmtM(m, v), "tot"], ["dl", "Δ", (v, r) => chg(m, r.tot, r.prev, all, pb), "", "Выбранный период к предыдущему; при разной длине — в среднем за день"]);
+  return `<div class="card"><div class="row"><label class="meta">Показатель <select data-st="rmet">${opts.map(o => `<option value="${o.id}" ${o.id === m.id ? "selected" : ""}>${o.s ? o.s + ": " : ""}${o.l}</option>`).join("")}</select></label>
+    ${seg("rtop", [["20", "Топ-20"], ["50", "Топ-50"], ["all", "Все"]])}${seg("rflt", [["all", "Все"], ["dn", `Хуже на 10%+ (${rows0.filter(r => bad(r.dl)).length})`], ["up", `Лучше на 10%+ (${rows0.filter(r => good(r.dl)).length})`]])}<span class="meta">клик по строке — РНП артикула</span></div>
+  ${T("rnpall", cols, rows, { click: "rnpnm", h: 640, hint: `${m.l} по ${st.gran === "d" ? "дням" : st.gran === "w" ? "неделям" : "месяцам"}` })}</div>`;
+}
+/* реклама в РНП: кампании, кампания по артикулам, кластеры */
+const RA = [
+  { id: "views", l: "Показы", k: "sum", b: 1 }, { id: "clicks", l: "Клики", k: "sum", b: 1 },
+  { id: "ctr", l: "CTR, %", k: "ratio", num: "clicks", den: "views", mul: 100, f: fctr, b: 1 },
+  { id: "cpc", l: "CPC, ₽", k: "ratio", num: "spend", den: "clicks", f: f1, b: -1 },
+  { id: "cpm", l: "CPM, ₽", k: "ratio", num: "spend", den: "views", mul: 1000, f: money, b: -1 },
+  { id: "spend", l: "Расход, ₽", k: "sum", f: money, b: 0, bold: 1 }, { id: "atbs", l: "Корзины", k: "sum", b: 1 },
+  { id: "orders", l: "Заказы", k: "sum", b: 1, bold: 1 }, { id: "cr", l: "Клик → заказ, %", k: "ratio", num: "orders", den: "clicks", mul: 100, f: pct, b: 1 },
+  { id: "cpo", l: "CPO, ₽", k: "ratio", num: "spend", den: "orders", f: money, b: -1 }, { id: "osum", l: "Сумма заказов, ₽", k: "sum", f: money, b: 1 },
+  { id: "drr", l: "ДРР кампании, %", k: "ratio", num: "spend", den: "osum", mul: 100, f: pct, b: -1, bold: 1 }];
+const RAI = Object.fromEntries(RA.map(m => [m.id, m]));
+const AK = ["views", "clicks", "spend", "atbs", "orders", "osum"];
+function campX(aid, nm) {
+  const n = D.meta.dates.length, X = {}; AK.forEach(k => X[k] = new Array(n).fill(null));
+  Object.entries(D.rnp?.cn?.[aid] || {}).forEach(([k, rows]) => { if (nm && +k !== nm) return; rows.forEach(r => AK.forEach((key, j) => X[key][r[0]] = (X[key][r[0]] || 0) + r[j + 1])); });
+  return X;
+}
+const cname = aid => D.camp[aid]?.name || D.rnp?.cnames?.[aid]?.[0] || `Кампания ${aid}`;
+const ctypeOf = aid => D.camp[aid]?.type || D.rnp?.cnames?.[aid]?.[1] || "";
+function clBuckets() {
+  const C = D.clday || { days: [], weeks: [] }, R = RG();
+  if (st.gran === "d") return C.days.map((d, j) => [d, j]).filter(([d]) => d >= R.a && d <= R.b).map(([d, j]) => ({ k: d, lab: fmtD(d), sub: wdOf(d), src: [["d", j]], we: ["сб", "вс"].includes(wdOf(d)) }));
+  const W = C.weeks.map((w, j) => ({ k: w, src: [["w", j]], n: 7 })).filter(b => b.k <= R.b && addD(b.k, 6) >= R.a); const lastW = C.weeks.at(-1), byW = {};
+  C.days.forEach((d, j) => { if ((lastW && d <= addD(lastW, 6)) || d < R.a || d > R.b) return; const k = mon(d); (byW[k] = byW[k] || []).push(["d", j]); });
+  Object.entries(byW).forEach(([k, src]) => W.push({ k, src, n: src.length }));
+  if (st.gran === "w") return W.map(b => ({ ...b, lab: `${fmtD(b.k)}–${fmtD(addD(b.k, 6))}`, sub: b.n < 7 ? `${b.n} дн` : "" }));
+  const M = {}; W.forEach(b => { const k = addD(b.k, 3).slice(0, 7); (M[k] = M[k] || { k, src: [] }).src.push(...b.src); });
+  return Object.values(M).map(b => ({ ...b, lab: `${MONS[+b.k.slice(5, 7) - 1]} ${b.k.slice(2, 4)}`, sub: "по неделям" }));
+}
+const CM = [["spend", "Расход, ₽", money, 0], ["views", "Показы", N, 1], ["clicks", "Клики", N, 1], ["ctr", "CTR, %", fctr, 1], ["orders", "Заказы", N, 1], ["cpo", "CPO, ₽", money, -1], ["pos", "Ср. позиция", f1, -1], ["atbs", "Корзины", N, 1]];
+function clusterGrid(pairs, CB) {
+  const met = CM.find(x => x[0] === st.cmet) || CM[0]; const Q = {};
+  pairs.forEach(pk => { const P = D.clday.p[pk]; if (!P) return;
+    ["d", "w"].forEach(kind => (P[kind] || []).forEach(([qi, j, views, clicks, spend, atbs, orders, pos]) => {
+      const q = P.q[qi]; const A = Q[q] = Q[q] || {}; const a = A[kind + j] = A[kind + j] || [0, 0, 0, 0, 0, 0, 0];
+      a[0] += views; a[1] += clicks; a[2] += spend; a[3] += atbs; a[4] += orders; if (pos) { a[5] += pos * (views || 1); a[6] += views || 1; } })); });
+  const cell = (A, b) => { const t = [0, 0, 0, 0, 0, 0, 0]; let any = false; b.src.forEach(([kind, j]) => { const a = A[kind + j]; if (a) { any = true; a.forEach((v, i) => t[i] += v); } }); return any ? t : null; };
+  const pick = t => !t ? null : ({ spend: t[2], views: t[0], clicks: t[1], ctr: t[0] ? t[1] / t[0] * 100 : null, orders: t[4], cpo: t[4] ? t[2] / t[4] : null, pos: t[6] ? t[5] / t[6] : null, atbs: t[3] })[met[0]];
+  const rows = Object.entries(Q).map(([q, A]) => { const r = { id: q, q }; let tt = [0, 0, 0, 0, 0, 0, 0];
+    const vals = CB.map(b => { const t = cell(A, b); if (t) t.forEach((v, i) => tt[i] += v); return pick(t); });
+    vals.forEach((v, j) => { r["c" + j] = v; r["k" + j] = j ? dcls({ b: met[3], k: "avg" }, v, vals[j - 1], CB[j], CB[j - 1]) : ""; });
+    r.sp = tt[2]; r.or = tt[4]; r.cpo = tt[4] ? tt[2] / tt[4] : null; r.tot = pick(tt); return r; }).filter(r => r.sp > 0 || r.or > 0).sort((a, b) => b.sp - a.sp).slice(0, 120);
+  const cols = [["q", "Кластер", v => esc(v), "l wrap"]];
+  CB.forEach((b, j) => cols.push(["c" + j, `${b.lab}${b.sub ? `<br><span class="meta">${b.sub}</span>` : ""}`, (v, r) => `<div class="hm ${r["k" + j]}">${v == null ? "—" : met[2](v)}</div>`, b.we ? "we" : ""]));
+  cols.push(["tot", "Итого", v => v == null ? "—" : met[2](v), "tot"], ["sp", "Расход, ₽", money], ["or", "Заказы", N], ["cpo", "CPO, ₽", money]);
+  return `<div class="row"><span class="meta">Кластеры: </span>${seg("cmet", CM.map(x => [x[0], x[1]]))}</div>
+  ${CB.length ? T("rnpcl", cols, rows, { h: 520, hint: st.gran === "d" ? "по дням (WB хранит кластеры окном до 30 дней — история копится с каждым обновлением)" : "по неделям" }) : `<p class="meta">Нет данных кластеров за период.</p>`}`;
+}
+function rnpAds() {
+  const B = visB(D.meta.dates), all = { ...allOf(B), keys: [] }, pb = cmpB(D.meta.dates); st.anm = st.anm || "all";
+  const nmF = st.anm === "nm" ? st.nm : null; const s = D.byNm[st.nm];
+  const ids = Object.keys(D.rnp?.cn || {}).filter(aid => !nmF || D.rnp.cn[aid][nmF]);
+  const m = RAI[st.amet] || RAI.spend;
+  const rows = ids.map(aid => { const X = campX(aid, nmF); const r = { id: aid, name: cname(aid), type: ctypeOf(aid) };
+    const vals = B.map(b => mval(m, X, b)); vals.forEach((v, j) => { r["c" + j] = v; r["k" + j] = j ? dcls(m, v, vals[j - 1], B[j], B[j - 1]) : ""; });
+    r.sp = mval(RAI.spend, X, all); r.or = mval(RAI.orders, X, all); r.cpo = mval(RAI.cpo, X, all); r.drr = mval(RAI.drr, X, all); r.tot = mval(m, X, all); r.prev = mval(m, X, pb); r.psp = mval(RAI.spend, X, pb); r.dl = relChg(m, r.tot, r.prev, all, pb); return r; })
+    .filter(r => r.sp > 0 || r.psp > 0).sort((a, b) => (b.sp || 0) - (a.sp || 0));
+  const cols = [["name", "Кампания", (v, r) => `${esc(v)}<br><span class="meta">${r.id} · ${esc(r.type)}</span>`, "l wrap"]];
+  B.forEach((b, j) => cols.push(["c" + j, `${b.lab}${b.sub ? `<br><span class="meta">${b.sub}</span>` : ""}`, (v, r) => `<div class="hm ${r["k" + j]}">${fmtM(m, v)}</div>`, b.we ? "we" : ""]));
+  cols.push(["tot", st.pd === "day" ? "В день" : "Итого", v => fmtM(m, v), "tot"], ["prev", "Пред. период", v => fmtM(m, v), "tot"], ["dl", "Δ", (v, r) => chg(m, r.tot, r.prev, all, pb)], ["sp", "Расход за период", money], ["or", "Заказы", N], ["cpo", "CPO", money], ["drr", "ДРР", pct]);
+  const sel = st.rcamp && rows.find(r => String(r.id) === String(st.rcamp)) ? String(st.rcamp) : null;
+  let det = "";
+  if (sel) {
+    const X = campX(sel, nmF); const mm = RAI[st.rrowa] || RAI.spend;
+    const per = Object.entries(D.rnp.cn[sel] || {}).map(([k]) => { const Y = campX(sel, +k); const ss = D.byNm[+k];
+      return { nm: +k, vc: ss?.vc || k, sp: mval(RAI.spend, Y, all), vi: mval(RAI.views, Y, all), cl: mval(RAI.clicks, Y, all), ctr: mval(RAI.ctr, Y, all), or: mval(RAI.orders, Y, all), cpo: mval(RAI.cpo, Y, all), drr: mval(RAI.drr, Y, all) }; })
+      .filter(r => r.sp > 0).sort((a, b) => b.sp - a.sp);
+    const pairs = Object.keys(D.clday?.p || {}).filter(pk => pk.split("|")[0] === sel && (!nmF || +pk.split("|")[1] === nmF));
+    det = `<div class="card"><div class="row sp"><h2>${esc(cname(sel))} <span class="meta">${sel} · ${esc(ctypeOf(sel))}${nmF ? ` · только ${esc(s.vc)}` : ""}</span></h2><button class="btn" data-set="rcamp=">Закрыть</button></div>
+      ${(() => { const keep = st.rrow; st.rrow = mm.id; const t = rnpTable(RA, B, X, null, { first: "Показатель кампании", h: 420, id: "rnpcamp" }).replace(/data-row="/g, 'data-rowa="'); st.rrow = keep; return t; })()}
+      ${rnpChart("rnpca", mm, B, X, null, mm.id !== "orders" ? RAI.orders : null)}
+      <h3>Артикулы в кампании за период</h3>
+      ${T("rnpcn", [["vc", "Артикул", vcLink, "l"], ["sp", "Расход, ₽", money], ["vi", "Показы", N], ["cl", "Клики", N], ["ctr", "CTR", fctr], ["or", "Заказы", N], ["cpo", "CPO, ₽", money], ["drr", "ДРР", pct]], per, { h: 260 })}
+      <h3>Поисковые кластеры кампании в динамике</h3>${clusterGrid(pairs, clBuckets())}</div>`;
+  }
+  return `<div class="card"><div class="row"><label class="meta">Показатель <select data-st="amet">${RA.map(o => `<option value="${o.id}" ${o.id === m.id ? "selected" : ""}>${o.l}</option>`).join("")}</select></label>
+    ${seg("anm", [["all", "Все кампании"], ["nm", "Только " + (s ? s.vc : "артикул")]])}<span class="meta">клик по кампании — показатели по дням, артикулы и кластеры</span></div>
+  ${T("rnpads", cols, rows, { click: "rcamp", h: 460, sel: r => String(r.id) === sel })}</div>${det}
+  ${st.anm === "nm" && !sel ? `<div class="card"><h2>Кластеры артикула ${esc(s.vc)} по всем кампаниям</h2>${clusterGrid(Object.keys(D.clday?.p || {}).filter(pk => +pk.split("|")[1] === st.nm), clBuckets())}</div>` : ""}`;
+}
+/* ключи и позиции */
+const posCls = v => v == null ? "p0" : v <= 10 ? "p1" : v <= 30 ? "p2" : v <= 100 ? "p3" : "p4";
+function rnpKeys() {
+  const s = D.byNm[st.nm]; if (!s) return `<div class="card">Выберите артикул.</div>`;
+  const K = D.kw?.own?.[st.nm], W = D.kw?.wb?.nm?.[st.nm]; st.kmet = st.kmet || (K ? "p" : "wbo");
+  const isWB = st.kmet === "wbp" || st.kmet === "wbo"; const dates = isWB ? (D.kw?.wb?.dates || []) : (D.kw?.dates || []);
+  const segK = seg("kmet", [["p", "Позиция (MPSTATS)"], ["o", "Органика"], ["c", "Ставка CPM"], ["wbp", "Позиция WB"], ["wbo", "Заказы по запросу WB"]]);
+  const src = isWB ? W : K;
+  if (!src) return `<div class="row">${segK}</div><div class="card">${isWB ? "WB отдаёт заказы и позиции по запросам для 40 самых заказываемых карточек — этот артикул в них не вошёл." : "Артикул не в списке отслеживания MPSTATS (40 самых заказываемых своих карточек + конкуренты). Переключитесь на «Позиция WB» или «Заказы по запросу WB»."}</div>`;
+  const B = buckets(dates, st.gran, RG().a, RG().b), pbk = cmpB(dates);
+  const list = isWB ? W.q.map(([q, f, arr]) => ({ q, f, arr: arr.map(x => x ? (st.kmet === "wbp" ? x[0] : x[1]) : null), ad: null }))
+    : K.k.map(([q, f], r) => ({ q, f, arr: (st.kmet === "o" ? K.o : st.kmet === "c" ? K.c : K.p)[r].map(v => v > 0 ? v : null), ad: K.c[r] }));
+  const agg = (arr, b) => { const v = b.ix.map(i => arr[i]).filter(x => x != null && x > 0); if (st.kmet === "wbo") { const z = b.ix.map(i => arr[i]).filter(x => x != null); return z.length ? z.reduce((a, c) => a + c, 0) : null; } return v.length ? v.reduce((a, c) => a + c, 0) / v.length : null; };
+  const isPos = st.kmet !== "c" && st.kmet !== "wbo";
+  const rows = list.map((x, r) => { const o = { id: x.q, q: x.q, f: x.f };
+    const vals = B.map(b => agg(x.arr, b)); vals.forEach((v, j) => { o["c" + j] = v; const b = B[j];
+      o["a" + j] = x.ad ? b.ix.filter(i => x.ad[i] !== 0).length : 0; o["n" + j] = b.ix.length; });
+    o.avg = agg(x.arr, allOf(B)); o.prev = agg(x.arr, pbk); o.dl = o.avg != null && o.prev != null ? (isPos ? o.prev - o.avg : o.avg - o.prev) : null;
+    o.rel = isPos ? (o.avg ? x.f / Math.max(o.avg, 1) : -1) : (o.avg || 0) * 1e6 + x.f; return o; }).sort((a, b) => b.rel - a.rel);
+  const fmt = v => v == null ? "—" : st.kmet === "c" ? N(v) : st.kmet === "wbo" ? N(v) : N(v, st.gran === "d" ? 0 : 1);
+  const cols = [["q", "Запрос", v => esc(v), "l wrap"], ["f", "Частота / мес", N]];
+  B.forEach((b, j) => cols.push(["c" + j, `${b.lab}${b.sub ? `<br><span class="meta">${b.sub}</span>` : ""}`, (v, r) => `<div class="hm ${isPos ? posCls(v) : ""}" ${r["a" + j] ? `title="реклама: ${r["a" + j]} из ${r["n" + j]} дн"` : ""}>${fmt(v)}${r["a" + j] && st.kmet === "p" ? "<sup>р</sup>" : ""}</div>`, b.we ? "we" : ""]));
+  cols.push(["avg", st.kmet === "wbo" ? "Итого" : "Среднее", fmt, "tot"], ["prev", "Пред. период", fmt, "tot"], ["dl", isPos ? "Δ мест" : "Δ", v => v == null ? "—" : dlt(v, false, "")]);
+  const kq = st.kq && list.find(x => x.q === st.kq) ? st.kq : list[0]?.q;
+  let ch = "";
+  if (kq && !isWB && K) {
+    const r = K.k.findIndex(x => x[0] === kq); const mine = K.p[r].map(v => v > 0 ? v : null);
+    const rv = Object.entries(D.kw.riv || {}).filter(([, x]) => x.a === s.aroma && x.k.some(k => k[0] === kq)).map(([id, x]) => { const i = x.k.findIndex(k => k[0] === kq); return { id, x, p: x.p[i].map(v => v > 0 ? v : null), c: x.c[i] }; });
+    const last = a => { for (let i = a.length - 1; i >= 0; i--) if (a[i] != null) return a[i]; return null; };
+    const avg = a => { const v = a.filter(x => x != null); return v.length ? v.reduce((p, c) => p + c, 0) / v.length : null; };
+    const rt = rv.map(o => ({ id: o.id, name: o.x.n, seller: o.x.s, last: last(o.p), avg: avg(o.p.slice(-14)), ad: o.c.slice(-14).filter(v => v !== 0).length, cpm: median(o.c.slice(-14).filter(v => v > 0)) }));
+    rt.unshift({ id: st.nm, name: s.vc + " (вы)", seller: "parfume de Paris", last: last(mine), avg: avg(mine.slice(-14)), ad: K.c[r].slice(-14).filter(v => v !== 0).length, cpm: median(K.c[r].slice(-14).filter(v => v > 0)), me: 1 });
+    ch = `<div class="card"><h2>«${esc(kq)}»: вы и конкуренты аромата по дням</h2>
+      ${line("rnpk", D.kw.dates, [{ l: "Вы", d: mine, c: "--c1", w: 3 }, ...rv.slice(0, 4).map((o, i) => ({ l: (o.x.s || "").slice(0, 24) || o.id, d: o.p, c: ["--c2", "--c3", "--c4", "--c5"][i] }))], { h: 240, zero: false, rev: true })}
+      ${T("rnpkr", [["name", "Карточка", (v, r) => r.me ? esc(v) : `<a class="lnk" href="https://www.wildberries.ru/catalog/${r.id}/detail.aspx" target="_blank" rel="noopener">${esc(v)}</a>`, "l wrap"], ["seller", "Продавец", null, "l"], ["last", "Позиция сейчас", N], ["avg", "Средняя за 14 дн", f1], ["ad", "Дней в рекламе из 14", N], ["cpm", "CPM, медиана", N]], rt, { me: r => r.me, h: 260 })}</div>`;
+  }
+  return `<div class="row">${segK}<span class="meta">${esc(s.vc)} · клик по запросу — график «вы и конкуренты»</span></div>
+  <div class="card">${T("rnpkw", cols, rows, { click: "kq", h: 600, sel: r => r.q === kq, hint: isWB ? "WB: средняя позиция и заказы по запросу, 30 главных запросов карточки" : "MPSTATS: позиция в выдаче (р — в этот день показ рекламный)" })}
+  <p class="note">Цвет позиции: <span class="pill pp1">1–10</span> <span class="pill pp2">11–30</span> <span class="pill pp3">31–100</span> <span class="pill pp4">дальше 100</span>. В режимах «Недели» и «Месяцы» — средняя позиция за дни, когда карточка была в выдаче. «Пред. период» — средняя позиция за такой же период до выбранного; Δ мест больше нуля — карточка поднялась. MPSTATS хранит 60 дней, WB по запросам — с первой загрузки (история копится).</p></div>${ch}`;
+}
+
+function pulseCard() {
+  if (!need(["rnp"])) return `<div class="card"><span class="meta">Пульс дня загружается…</span></div>`;
+  const n = D.meta.dates.length, X = base(D.order), keep = st.pd; st.pd = "day";
+  let y = n - 1; while (y > 8 && X.opens[y] == null) y--;  // последний день с полной воронкой
+  const day = { ix: [y], full: true, days: 1, k: "y" }, wk = { ix: [1, 2, 3, 4, 5, 6, 7].map(i => y - i), full: true, days: 7, k: "w" };
+  const rows = [["Заказы, шт", "orders"], ["Заказы, ₽", "sum"], ["Переходы", "opens"], ["Переход → заказ", "crt"], ["Реклама, ₽", "ad_sum"], ["ДРР", "drr"], ["Прибыль (оценка), ₽", "prof"], ["СПП", "spp"]]
+    .map(([l, id]) => { const m = RMI[id], a = mval(m, X, day), b = mval(m, X, wk); return { l, m, a, b, d: a != null && b ? (a / b - 1) * 100 : null }; });
+  const arts = D.order.slice(0, 60).map(nm => { const o = D.series?.[nm]?.orders || []; const a = o[y] || 0, b = [1, 2, 3, 4, 5, 6, 7].reduce((p, i) => p + (o[y - i] || 0), 0) / 7;
+    return { nm, vc: D.byNm[nm]?.vc, a, b, d: b >= 5 ? (a / b - 1) * 100 : null }; }).filter(r => r.d != null);
+  st.pd = keep;
+  const li = r => `<div class="row sp"><a class="lnk" data-set="nm=${r.nm}&rsub=nm&tab=rnp">${esc(r.vc)}</a><span class="mono">${N(r.a)} против ${N(r.b, 1)} ${dlt(r.d)}</span></div>`;
+  return `<div class="card"><div class="row sp"><h2>Пульс дня: ${fmtD(D.meta.dates[y])}, ${wdOf(D.meta.dates[y])} — к среднему за 7 дней до него</h2><a class="lnk" data-set="rsub=all&gran=d&rflt=dn&tab=rnp">РНП по всем артикулам →</a></div>
+    <div class="kpis">${rows.map(r => `<div class="kpi"><span class="l">${r.l}</span><span class="v">${fmtM(r.m, r.a)}</span><span class="meta">в среднем ${fmtM(r.m, r.b)} ${dlt(r.d, r.m.b < 0)}</span></div>`).join("")}</div>
+    <div class="grid"><div><h3>Заказы просели сильнее всего</h3>${arts.slice().sort((p, q) => p.d - q.d).slice(0, 6).map(li).join("")}</div>
+    <div><h3>Заказы выросли сильнее всего</h3>${arts.slice().sort((p, q) => q.d - p.d).slice(0, 6).map(li).join("")}</div></div></div>`;
+}
+
+/* ---------- АУДИТОРИЯ: портрет, триггеры, план инфографики, слоганы ---------- */
+const hbars = (rows, tot, color = "--c1", unit = "%") => { const mx = Math.max(1, ...rows.map(r => r[1])); return `<div class="bars">${rows.map(r => `<div class="bar"><span>${esc(String(r[0]).replace(" - ", "–"))}</span><span class="t"><i style="left:0;width:${r[1] / mx * 100}%;background:var(${color})"></i></span><span class="d">${unit === "%" ? N(r[1] / tot * 100, 1) + "%" : N(r[1])}</span></div>`).join("")}</div>`; };
+function audText() {
+  const A = D.aud, out = [`ПОРТРЕТ ПОКУПАТЕЛЯ (${A.period})`, A.persona, "", "ТРИГГЕРЫ ДЛЯ ИНФОГРАФИКИ"];
+  A.triggers.forEach((t, i) => out.push(`${i + 1}. ${t.t}. ${t.why}\n   Как показать: ${t.how}\n   Текст: «${t.text}»`));
+  out.push("", "ПЛАН СЛАЙДОВ"); A.plan.forEach(([t, d], i) => out.push(`${i + 1}. ${t} — ${d}`));
+  out.push("", "ПРАВИЛА ДЛЯ ТЕЛЕФОНА"); A.rules.forEach(r => out.push("• " + r));
+  out.push("", "СЛОГАНЫ"); Object.entries(A.slogans).forEach(([g, l]) => { out.push(g + ":"); l.forEach(x => out.push("• " + x)); });
+  out.push("", "КРЮЧКИ ДЛЯ ОБЛОЖЕК ПО АРОМАТАМ"); A.aromas.filter(x => x.hook).forEach(x => out.push(`• ${x.aroma}: ${x.hook}${x.top.length ? ` (хвалят: ${x.top.map(([k, v]) => `${k.toLowerCase()} ${Math.round(v)}%`).join(", ")})` : ""}`));
+  out.push("", "ВАЖНО"); A.caveats.forEach(c => out.push("• " + c));
+  return out.join("\n");
+}
+VIEWS.aud = () => {
+  if (!need(["aud"])) return `<div class="empty">Загружаю…</div>`;
+  const A = D.aud; if (!A || !A.k?.buyers) return `<h1>Аудитория</h1><div class="card">Нет выгрузки «Портрет покупателя». Скачайте её в кабинете WB (Аналитика → Портрет покупателя), положите zip в «Загрузки» и скажите Claude «обнови пульт».</div>`;
+  const k = A.k, R = A.reviews, sum = a => a.reduce((x, r) => x + r[1], 0) || 1;
+  const kp = (l, v, m) => `<div class="kpi"><span class="v">${v}</span><span class="l">${l}</span>${m ? `<span class="meta">${m}</span>` : ""}</div>`;
+  const rv = (rows, n, color) => `<div class="bars">${rows.map(([t, c, p]) => `<div class="bar"><span>${esc(t)}</span><span class="t"><i style="left:0;width:${Math.min(100, p / (rows[0]?.[2] || 1) * 100)}%;background:var(${color})"></i></span><span class="d">${N(p, 1)}%</span></div>`).join("")}</div>`;
+  const ar = A.aromas.map(x => ({ ...x, tops: x.top.map(([t, p]) => `${t} ${Math.round(p)}%`).join(" · ") || "мало отзывов", fears: x.fear.map(([t, p]) => `${t} ${Math.round(p)}%`).join(" · ") || "—" }));
+  after(() => { const b = $("#audCopy"); if (b) b.onclick = async () => { const txt = audText();
+    try { await navigator.clipboard.writeText(txt); toast("ТЗ скопировано — вставьте дизайнеру в чат или документ"); }
+    catch (e) { const dl = await cap("downloads"); if (dl) { try { await dl.save({ filename: "ТЗ_инфографика.txt", data: txt }); } catch (e2) {} } else toast("Не удалось скопировать в этом браузере"); } }; });
+  return `<div class="row sp"><h1>Аудитория и инфографика</h1><span class="meta">портрет WB за ${esc(A.period)} · отзывы MPSTATS: ${N(R.n)} (средняя ${N(R.avg, 2)}★, на 5★ — ${N(R.five, 1)}%)</span></div>
+  <div class="callout"><b>Кто покупает:</b> ${esc(A.persona)}</div>
+  <div class="kpis">${kp("Покупателей за неделю", N(k.buyers))}${kp("Средний чек", N(k.check) + " ₽", `по возрастам ${N(k.check_min)}–${N(k.check_max)} ₽`)}${kp("Женщины", N(k.women, 1) + "%", `мужчины ${N(k.men, 1)}%`)}
+    ${kp("Ядро 24–47 лет", N(k.core, 1) + "%", `чаще всего ${esc(k.top_age)} — ${N(k.top_age_sh, 1)}%`)}${kp("С детьми", N(k.kids, 1) + "%", `не в отношениях, с детьми — ${N(k.single_kids, 1)}%`)}${kp("С телефона", N(k.mobile, 1) + "%", `Android ${N(k.android, 1)}% · iOS ${N(k.ios, 1)}%`)}${kp("Из стран СНГ", N(k.cis, 1) + "%")}</div>
+  <div class="grid"><div class="card"><h2>Возраст</h2>${hbars(A.age, sum(A.age))}</div><div class="card"><h2>Семья и дети</h2>${hbars(A.family, sum(A.family), "--c2")}</div>
+    <div class="card"><h2>Регионы</h2>${hbars(A.regions.slice(0, 10), sum(A.regions), "--c3")}</div><div class="card"><h2>Платформа</h2>${hbars(A.platform, sum(A.platform), "--c4")}</div></div>
+  <div class="grid"><div class="card"><h2>Что цепляет: ${N(R.pos_n)} отзывов на 4–5★</h2>${rv(R.pos, R.pos_n, "--good")}<p class="note">Доля отзывов с текстом, где тема упоминается. Это слова самих покупательниц — сильнейшие аргументы для картинок.</p></div>
+    <div class="card"><h2>Что останавливает: ${N(R.neg_n)} отзывов на 1–3★</h2>${rv(R.neg, R.neg_n, "--bad")}<p class="note">Эти страхи стоит снимать на инфографике заранее: пирамида нот против «не похож», честная стойкость против «не держится».</p></div></div>
+  <div class="card"><div class="row sp"><h2>Триггерные точки для инфографики</h2><button class="btn pri" id="audCopy">Скопировать ТЗ для дизайнера</button></div>
+    ${T("audtr", [["t", "Триггер", v => `<b>${esc(v)}</b>`, "l wrap"], ["why", "Почему работает для вашей ЦА", null, "l wrap"], ["how", "Как показать на картинке", null, "l wrap"], ["text", "Пример текста", v => `«${esc(v)}»`, "l wrap"]], A.triggers, { h: 760, end: false })}</div>
+  <div class="card"><h2>По ароматам: что хвалят, чего боятся, крючок для обложки</h2>
+    ${T("audar", [["aroma", "Аромат", (v, r) => `<a class="lnk" data-go="${r.nm}">${esc(v)}</a>`, "l"], ["group", "Группа", null, "l"], ["orders", "Заказы 30 дн", N], ["tops", "Хвалят в отзывах", null, "l wrap"], ["fears", "Жалобы", null, "l wrap"], ["hook", "Крючок для обложки", v => v ? `«${esc(v)}»` : "—", "l wrap"], ["pos_n", "Отзывов 4–5★", N]], ar, { h: 600, end: false })}
+    <p class="note">«Стойкость 45%» — столько положительных отзывов этого аромата хвалят стойкость: такую цифру можно ставить на слайд «Стойкость». Крючки — варианты текста, не факты о составе.</p></div>
+  <div class="grid"><div class="card"><h2>План инфографики: 7 слайдов</h2><ol class="plan">${A.plan.map(([t, d]) => `<li><b>${esc(t)}.</b> ${esc(d)}</li>`).join("")}</ol></div>
+    <div class="card"><h2>Правила: смотрят с телефона</h2><ul class="slog">${A.rules.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div></div>
+  <div class="card"><h2>Слоганы под вашу аудиторию</h2><div class="grid">${Object.entries(A.slogans).map(([g, l]) => `<div><h3>${esc(g)}</h3><ul class="slog">${l.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div></div>
+  <div class="card"><h2>Подарочный спрос в нише «Духи»: ${N(A.gift.total)} поисков в месяц</h2><p class="note">Для женщин — ${N(A.gift.women)}, для мужчин — ${N(A.gift.men)}, с «Новым годом» — ${N(A.gift.ny)}. Унисекс-ароматы можно продвигать как подарок мужу и папе.</p>
+    ${T("audgift", [["q", "Запрос", null, "l"], ["f", "Поисков в месяц", N]], A.gift.top.map(([q, f]) => ({ q, f })), { h: 360, end: false })}</div>
+  <div class="callout w"><b>Важно для инфографики</b><ul class="slog">${A.caveats.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>`;
+};
+/* ---------- НОВИНКИ И ПАРЫ ---------- */
+const VERDN = { launch: ["Запускать", "good"], check: ["Проверить", "acc"], weak: ["Слабо", "mute"], mono: ["Занято брендом", "warn"] };
+const wbl = (id, t) => `<a class="lnk" href="https://www.wildberries.ru/catalog/${id}/detail.aspx" target="_blank" rel="noopener">${esc(t)}</a>`;
+VIEWS.novel = () => {
+  if (!need(["novel"])) return `<div class="empty">Загружаю…</div>`;
+  const V = D.novel; if (!V) return `<div class="card">Нет данных. Скажите Claude «обнови пульт».</div>`;
+  st.nsub = st.nsub || "cand";
+  const head = `<div class="row sp"><h1>Новинки и пары</h1><span class="meta">спрос: запросы ниши «Духи» за ${fmtD(V.period[0])}–${fmtD(V.period[1])} · рынок: карточки до ${N(V.seg_max)} ₽ за ${fmtD(V.mk_period?.[0])}–${fmtD(V.mk_period?.[1])} (MPSTATS)</span></div>
+    ${V.mp_broken ? `<div class="callout w">С ${fmtD(V.mp_broken)} MPSTATS отдаёт обрезанную выручку по рынку, поэтому рынок показан за 30 дней до этой даты. Спрос по запросам — свежий.</div>` : ""}
+    <div class="row">${seg("nsub", [["cand", "Новые ароматы"], ["our", "Ваш ассортимент"], ["brands", "Бренды"], ["notes", "Ноты и типы"], ["pairs", "Пары и наборы"]])}</div>`;
+  return head + ({ cand: novCand, our: novOur, brands: novBrands, notes: novNotes, pairs: novPairs }[st.nsub] || novCand)(V);
+};
+const mk = (x, k) => (x.mk || {})[k] ?? null;
+function novCand(V) {
+  const rows = V.cands.map(x => ({ id: x.id, name: x.name, brand: x.brand, v: x.verdict, score: x.score, f: x.f, gr: x.gr, rev: mk(x, "seg_rev"), sales: mk(x, "seg_sales"), sel: mk(x, "seg_sellers"),
+    rps: mk(x, "rps"), top1: mk(x, "top1"), nw: mk(x, "new"), nmed: mk(x, "new_med"), price: mk(x, "med_price"), tr: mk(x, "trend") }));
+  const sel = V.cands.find(x => x.id === st.ncand) || V.cands[0];
+  const card = sel ? `<div class="card"><div class="row sp"><h2>${esc(sel.name)} <span class="meta">${esc(sel.brand)}</span></h2>${pill(...(VERDN[sel.verdict] || VERDN.weak))}</div>
+    <div class="kpis">${[["Спрос, запросов в месяц", N(sel.f)], ["Изменение спроса", sel.gr == null ? "—" : (sel.gr > 0 ? "+" : "") + N(sel.gr, 1) + "%"], ["Выручка сегмента 30 дн, ₽", money(mk(sel, "seg_rev"))], ["Продавцов в сегменте", N(mk(sel, "seg_sellers"))],
+      ["Выручка на продавца, ₽", money(mk(sel, "rps"))], ["Доля лидера", pct(mk(sel, "top1"))], ["Новичков за " + V.new_days + " дн", N(mk(sel, "new"))], ["Медиана выручки новичка, ₽", money(mk(sel, "new_med"))]].map(([l, v]) => `<div class="kpi"><span class="v">${v}</span><span class="l">${l}</span></div>`).join("")}</div>
+    <div class="grid"><div><h3>Запросы покупателей</h3>${T("novq", [["q", "Запрос", null, "l"], ["f", "Частота", N]], sel.qs.map(([q, f]) => ({ q, f })), { h: 260 })}</div>
+    <div><h3>Лидеры рынка (до ${N(V.seg_max)} ₽)</h3>${T("novtop", [["n", "Карточка", (v, r) => wbl(r.id, v), "l wrap"], ["s", "Продавец", null, "l"], ["p", "Цена", money], ["r", "Выручка 30 дн", money], ["q", "Продажи", N], ["d", "На WB с", fmtD], ["rt", "Рейтинг", f1]], mk(sel, "top") || [], { h: 260 })}</div></div>
+    <p class="note">${sel.verdict === "mono" ? "Почти вся выручка у одного продавца — обычно это сам бренд со своей линейкой (например, Faberlic). Аналог проиграет по цене и узнаваемости; запускать только как «аромат по мотивам» с отдельным SEO." : sel.verdict === "launch" ? "Спрос большой, деньги в сегменте распределены между несколькими продавцами, новички зарабатывают — аромат стоит запускать в 30 мл и сразу дать рекламу в поиске по запросам из таблицы." : sel.verdict === "check" ? "Спрос или выручка есть, но рынок либо мал, либо занят лидером. Проверьте отзывы лидеров и цену — запуск оправдан, если вы дадите аромат дешевле или лучше по стойкости." : "Мало спроса или денег в сегменте аналогов — запуск не окупит рекламу."}</p></div>` : "";
+  return `<div class="card">${T("novc", [["name", "Аромат", (v, r) => `${esc(v)}<br><span class="meta">${esc(r.brand)}</span>`, "l wrap"], ["v", "Вердикт", v => pill(...(VERDN[v] || VERDN.weak))], ["score", "Оценка", N, "", "Спрос × выручка на продавца в сегменте, со штрафом за монополию и бонусом за успешных новичков; 100 — лучший кандидат"],
+    ["f", "Спрос / мес", N], ["gr", "Δ спроса", v => dlt(v)], ["rev", "Выручка сегмента 30 дн", money], ["sales", "Продажи", N], ["sel", "Продавцов", N], ["rps", "На продавца, ₽", money], ["top1", "Доля лидера", pct],
+    ["nw", "Новичков", N, "", `Карточки, появившиеся за ${V.new_days} дней`], ["nmed", "Медиана новичка, ₽", money], ["price", "Медианная цена", money], ["tr", "Тренд выручки", v => dlt(v), "", "Вторая половина месяца к первой, медиана по лидерам"]], rows, { click: "ncand", h: 520, sel: r => r.id === sel?.id, hint: "ароматов, которых нет в вашем ассортименте" })}</div>${card}`;
+}
+function novOur(V) {
+  const rows = V.our.map(x => { const m = x.mk || {}; let act = "";
+    if (x.f >= 10000 && (m.share ?? 0) < 15) act = "Спрос большой, ваша доля мала — добрать рекламой и SEO";
+    else if (x.gr != null && x.gr <= -20) act = "Спрос падает — не наращивать рекламу";
+    else if (x.gr != null && x.gr >= 20) act = "Спрос растёт — увеличить бюджет";
+    else if ((m.share ?? 0) >= 40) act = "Вы лидер — держать позиции";
+    return { aroma: x.aroma, brand: x.brand, f: x.f, gr: x.gr, orders: x.orders, net1: x.net1, rev: m.seg_rev ?? null, share: m.share ?? null, sel: m.seg_sellers ?? null, tr: m.trend ?? null, act, nm: x.nms?.[0] }; });
+  return `<div class="card">${T("novour", [["aroma", "Аромат", (v, r) => r.nm ? `<a class="lnk" data-go="${r.nm}">${esc(v)}</a>` : esc(v), "l"], ["brand", "Бренд", null, "l"], ["f", "Спрос / мес", N], ["gr", "Δ спроса", v => dlt(v)], ["orders", "Ваши заказы 30 дн", N],
+    ["net1", "Прибыль / шт", netCls], ["rev", "Выручка сегмента 30 дн", money], ["share", "Ваша доля", pct, "", "Ваша выручка среди топ-30 карточек аромата до 1 500 ₽ (MPSTATS)"], ["sel", "Продавцов", N], ["tr", "Тренд", v => dlt(v)], ["act", "Что делать", null, "l wrap"]], rows, { h: 640 })}</div>`;
+}
+function novBrands(V) {
+  return `<div class="grid"><div class="card"><h2>Бренды-оригиналы в поиске</h2>${T("novbr", [["brand", "Бренд", null, "l"], ["f_all", "Спрос всего", N, "", "Запросы с брендом и его ароматами"], ["f_only", "Только бренд", N, "", "Запросы без конкретного аромата — человек выбирает в выдаче"], ["gr", "Δ", v => dlt(v)],
+      ["ours", "Ваши ароматы бренда", v => v.length ? esc(v.join(", ")) : "<span class='dn'>нет</span>", "l wrap"], ["our_orders", "Ваши заказы 30 дн", N], ["cands", "Кандидаты", v => esc(v.join(", ")), "l wrap"]], V.brands, { h: 600 })}</div>
+    <div class="card"><h2>Бренды-аналоги, которые ищут по названию</h2>${T("novcl", [["brand", "Бренд", null, "l"], ["f", "Запросов / мес", N], ["gr", "Δ", v => dlt(v)]], V.clones, { h: 600 })}
+      <p class="note">Если покупатели ищут другой бренд аналогов по имени, у него есть узнаваемость. Запросы с «parfume de Paris» показывают, насколько ищут вас.</p></div></div>`;
+}
+function novNotes(V) {
+  return `<div class="card">${T("novn", [["note", "Нота / тип", null, "l"], ["f", "Спрос / мес", N], ["gr", "Δ", v => dlt(v)], ["cards", "Ваших карточек", N, "", "По полю «Группа аромата» и названию карточки"], ["orders", "Ваши заказы 30 дн", N]], V.notes, { h: 600 })}
+  <p class="note">Спрос по нотам считается по всем запросам, где нота встречается: «сладкие духи», «духи с ванилью» и т.д. Ноты с большим спросом и малым числом ваших карточек — повод заполнить «Группу аромата» и описание или подобрать аромат.</p></div>`;
+}
+function novPairs(V) {
+  const b = V.baskets || {}; const sd = V.sets_demand || {}; const lg = D.rnp?.shop?.l;
+  return `<div class="kpis">${[["Заказов (корзин) за 120 дн", N(b.n)], ["С 2+ товарами", N(b.multi) + " · " + pct(b.multi_share)], ["Спрос «наборы»", N(sd["Наборы"]?.f) + " / мес"], ["Спрос «пробники»", N(sd["Пробники и миниатюры"]?.f) + " / мес"], ["Логистика одного заказа", lg ? N(lg) + " ₽" : "—"]].map(([l, v]) => `<div class="kpi"><span class="v">${v}</span><span class="l">${l}</span></div>`).join("")}</div>
+  <div class="grid"><div class="card"><h2>Покупают вместе у вас</h2>${T("novp", [["a", "Аромат 1", null, "l"], ["b", "Аромат 2", null, "l"], ["n", "Совместных заказов", N], ["lift", "Лифт", v => v == null ? "—" : "×" + N(v, 1), "", "Во сколько раз чаще случайного среди заказов с 2+ ароматами: больше 1 — ароматы тянут друг друга"],
+      ["ab", "Из заказов 1 берут 2", pct], ["ba", "Из заказов 2 берут 1", pct], ["net_a", "Прибыль/шт 1", netCls], ["net_b", "Прибыль/шт 2", netCls]], V.pairs, { h: 420 })}
+      <p class="note">Корзина — один номер заказа WB (gNumber). Набор из пары экономит одну логистику (≈${lg ? N(lg) : "—"} ₽) и поднимает средний чек; начните с пар с наибольшим числом совместных заказов и лифтом выше 1,2.</p></div>
+    <div class="card"><h2>Берут 2 и более одного аромата</h2>${T("novs", [["aroma", "Аромат", null, "l"], ["n", "Заказов с 2+ шт", N], ["share", "Доля заказов аромата", pct]], V.same, { h: 420 })}
+      <p class="note">Кандидаты в набор «2 × 30 мл одного аромата» или в 50–100 мл.</p></div></div>
+  <div class="grid"><div class="card"><h2>Наборы и пробники на рынке</h2>${T("novset", [["n", "Карточка", (v, r) => wbl(r.id, v), "l wrap"], ["s", "Продавец", null, "l"], ["p", "Цена", money], ["r", "Выручка 30 дн", money], ["q", "Продажи", N], ["ar", "Ароматы в наборе", v => esc((v || []).join(", ")), "l wrap"]], V.sets, { h: 480, me: r => r.me })}</div>
+    <div class="card"><h2>Какие ароматы кладут вместе</h2>${T("novsp", [["a", "Аромат 1", null, "l"], ["b", "Аромат 2", null, "l"], ["items", "Наборов", N], ["rev", "Их выручка 30 дн", money]], V.set_pairs, { h: 300 })}
+      <h3>Запросы про наборы</h3>${T("novsq", [["q", "Запрос", null, "l"], ["f", "Частота", N]], (V.set_queries || []).map(([q, f]) => ({ q, f })), { h: 220 })}
+      ${V.our_sets?.length ? `<h3>Ваши наборы</h3>${T("novos", [["vc", "Артикул", vcLink, "l"], ["orders", "Заказы 30 дн", N]], V.our_sets, { h: 160 })}` : ""}</div></div>`;
+}
+
+
+/* ---------- режим сайта (GitHub Pages): пароль команды, шифрованные данные, заметки в GitHub ---------- */
+let KEY = null;
+const b64u8 = b => Uint8Array.from(atob(b), c => c.charCodeAt(0));
+async function deriveKey(pw, E) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64u8(E.salt), iterations: E.iter, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+}
+const decBytes = (key, u8) => crypto.subtle.decrypt({ name: "AES-GCM", iv: u8.slice(0, 12) }, key, u8.slice(12));
+async function getData(n) {
+  const E = window.PULT_ENC;
+  if (!E) return (await fetch(`data/${n}.json${window.PULT_V ? "?v=" + window.PULT_V : ""}`)).json();
+  const u8 = new Uint8Array(await (await fetch(`data/${n}.bin?v=${E.v}`)).arrayBuffer());
+  const plain = await decBytes(KEY, u8);
+  return JSON.parse(await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream("gzip"))).text());
+}
+function askPw(tryPw) {
+  return new Promise(res => {
+    const o = document.createElement("div"); o.className = "ov";
+    o.innerHTML = `<div class="card" style="max-width:380px;width:100%;overflow:hidden"><h2>Пульт parfume de Paris</h2><p class="meta">Введите пароль команды. Он запомнится на этом устройстве.</p>
+      <input class="inp" id="pwIn" type="password" autocomplete="current-password" placeholder="Пароль" style="width:100%"><div class="row"><button class="btn pri" id="pwGo">Войти</button><span class="meta" id="pwSt"></span></div></div>`;
+    document.body.append(o); const inp = o.querySelector("#pwIn"), st_ = o.querySelector("#pwSt"); inp.focus();
+    const go = async () => { st_.textContent = "Проверяю…"; const k = await tryPw(inp.value); if (!k) { st_.textContent = "Неверный пароль"; inp.select(); return; }
+      try { localStorage.setItem("pult_pw", inp.value); } catch (e) {} o.remove(); res(k); };
+    o.querySelector("#pwGo").onclick = go; inp.onkeydown = e => { if (e.key === "Enter") go(); };
+  });
+}
+async function boot() {
+  const E = window.PULT_ENC; if (!E) return load();
+  const tryPw = async pw => { if (!pw) return null; try { const k = await deriveKey(pw, E); await decBytes(k, b64u8(E.check)); return k; } catch (e) { return null; } };
+  let pw = null; try { pw = localStorage.getItem("pult_pw"); } catch (e) {}
+  KEY = (await tryPw(pw)) || await askPw(tryPw);
+  if (E.notes?.tok) { try { GN.tok = new TextDecoder().decode(await decBytes(KEY, b64u8(E.notes.tok))); GN.repo = E.notes.repo; } catch (e) {} }
+  load();
+}
+/* заметки команды и статусы складов — комментарии в закрытом репозитории GitHub */
+const myName = () => { try { return localStorage.getItem("pult_name") || ""; } catch (e) { return ""; } };
+const setName = v => { try { localStorage.setItem("pult_name", v); } catch (e) {} };
+const GN = { tok: null, repo: null, nums: null,
+  on() { return !!(this.tok && this.repo); },
+  async api(path, opt = {}) {
+    const r = await fetch(`https://api.github.com/repos/${this.repo}${path}`, { ...opt, headers: { Authorization: `Bearer ${this.tok}`, Accept: "application/vnd.github+json", ...(opt.body ? { "Content-Type": "application/json" } : {}) } });
+    if (!r.ok) throw new Error("GitHub ответил " + r.status); return r.status === 204 ? null : r.json(); },
+  async issues() { if (this.nums) return this.nums; const m = {};
+    for (let p = 1; p <= 20; p++) { const a = await this.api(`/issues?state=all&per_page=100&page=${p}`); a.forEach(i => m[i.title] = i.number); if (a.length < 100) break; }
+    return this.nums = m; },
+  async issue(title, body) { const m = await this.issues(); if (m[title]) return m[title];
+    const i = await this.api("/issues", { method: "POST", body: JSON.stringify({ title, body: body || title }) }); return m[title] = i.number; },
+  parse(c) { const b = c.body || "", m = /<!--\s*(\{[\s\S]*?\})\s*-->/.exec(b); let meta = {}; try { meta = m ? JSON.parse(m[1]) : {}; } catch (e) {}
+    const text = b.replace(/<!--[\s\S]*?-->\s*/, "").replace(/^\*\*[^\n]*\n+/, "").trim(); return { ...meta, id: c.id, at: meta.at || c.created_at, text }; },
+  async list(title) { const m = await this.issues(); if (!m[title]) return []; const out = [];
+    for (let p = 1; p <= 10; p++) { const a = await this.api(`/issues/${m[title]}/comments?per_page=100&page=${p}`); out.push(...a.map(c => this.parse(c))); if (a.length < 100) break; }
+    return out; },
+  async add(title, meta, issueBody, text) { const n = await this.issue(title, issueBody);
+    const body = `<!-- ${JSON.stringify(meta).replace(/--/g, "- -")} -->\n**${(meta.by || "Участник").replace(/[*\n]/g, "")}** · ${fmtTs(meta.at)}\n\n${text}`;
+    return this.parse(await this.api(`/issues/${n}/comments`, { method: "POST", body: JSON.stringify({ body }) })); },
+  del(id) { return this.api(`/issues/comments/${id}`, { method: "DELETE" }); },
+  async latest(k) { const a = await this.api(`/issues/comments?sort=created&direction=desc&per_page=${k * 3}`); return a.map(c => this.parse(c)).filter(x => x.nm).slice(0, k); }
+};
+async function notesGH() {
+  const ta = $("#noteTxt"), bt = $("#noteSave"), stt = $("#noteSt"), list = $("#noteList"), who = $("#noteWho"), nm = st.nm; if (!ta) return;
+  who.innerHTML = ""; const nIn = document.createElement("input"); nIn.className = "inp"; nIn.placeholder = "Ваше имя для подписи"; nIn.value = myName(); nIn.onchange = () => setName(nIn.value.trim()); who.append(nIn);
+  const draw = async () => {
+    let items = []; try { items = await GN.list("nm:" + nm); } catch (e) { list.innerHTML = `<p class="meta">Заметки не загрузились: ${esc(e.message)}</p>`; return; }
+    if (st.nm !== nm || !document.body.contains(list)) return;
+    items.sort((a, b) => String(b.at).localeCompare(String(a.at)));
+    list.innerHTML = items.length ? "" : '<p class="meta">Заметок пока нет.</p>';
+    items.forEach(x => { const d = document.createElement("div"); d.className = "note-i"; const h = document.createElement("div"); h.className = "meta"; h.textContent = `${x.by || "Участник"} · ${fmtTs(x.at)}`;
+      if (x.by && x.by === myName()) { const del = document.createElement("a"); del.className = "lnk"; del.textContent = "удалить"; del.onclick = async () => { try { await GN.del(x.id); draw(); } catch (e) { stt.textContent = "Не удалилось: " + e.message; } }; h.append(" · ", del); }
+      const t = document.createElement("div"); t.style.whiteSpace = "pre-wrap"; t.textContent = x.text; d.append(h, t); list.append(d); });
+  };
+  bt.onclick = async () => { const text = ta.value.trim(); if (!text) return; const by = (nIn.value || "").trim(); if (!by) { stt.textContent = "Укажите имя — так команда поймёт, кто написал"; nIn.focus(); return; }
+    setName(by); bt.disabled = true;
+    try { await GN.add("nm:" + nm, { nm, vc: D.byNm[nm]?.vc || String(nm), by, at: new Date().toISOString() }, `${D.byNm[nm]?.vc || nm} · ${nm}`, text); ta.value = ""; stt.textContent = "Добавлено — видно всей команде"; await draw(); }
+    catch (e) { stt.textContent = "Не сохранилось: " + e.message; }
+    bt.disabled = false; };
+  draw();
+}
+async function teamNotesGH() {
+  const box = $("#teamNotes"); if (!box) return; let items = [];
+  try { items = await GN.latest(8); } catch (e) { box.innerHTML = `<p class="meta">Заметки не загрузились: ${esc(e.message)}</p>`; return; }
+  if (!document.body.contains(box)) return;
+  box.innerHTML = items.length ? "" : '<p class="meta">Пока нет. Заметки добавляются внизу страницы артикула.</p>';
+  items.forEach(x => { const d = document.createElement("div"); d.className = "note-i"; const h = document.createElement("div"); h.className = "meta";
+    const a = document.createElement("a"); a.className = "lnk"; a.textContent = x.vc || String(x.nm); a.onclick = () => go("sku", x.nm);
+    h.append(a, ` · ${x.by || "Участник"} · ${fmtTs(x.at)}`); const t = document.createElement("div"); t.style.whiteSpace = "pre-wrap"; t.textContent = x.text; d.append(h, t); box.append(d); });
+}
+async function whStatusGH() {
+  const stt = $("#whst"), sels = document.querySelectorAll("select[data-wh]"); let items = [];
+  try { items = await GN.list("wh"); } catch (e) { if (stt) stt.textContent = "Статусы не загрузились: " + e.message; }
+  const m = {}; items.sort((a, b) => String(a.at).localeCompare(String(b.at))).forEach(x => { if (x.wh) m[x.wh] = x.v || ""; });
+  sels.forEach(s => { s.value = m[s.dataset.wh] || ""; s.onchange = async () => { const name = s.closest(".row").firstElementChild.textContent;
+    try { await GN.add("wh", { wh: s.dataset.wh, v: s.value, by: myName(), at: new Date().toISOString() }, "Статусы складов", `${name}: ${s.value || "не проверено"}`); if (stt) stt.textContent = "Сохранено — видно всей команде"; }
+    catch (e) { if (stt) stt.textContent = "Не сохранилось: " + e.message; } }; });
+}
+
+/* ---------- СПРАВКА ---------- */
+function help() {
+  const o = $("#help"); o.hidden = false;
+  o.innerHTML = `<div class="card"><div class="row sp"><h2>Справка</h2><button class="btn" id="hclose">Закрыть (Esc)</button></div>
+  <p><b>Клавиши:</b> <kbd>1</kbd>–<kbd>9</kbd>, <kbd>0</kbd> — разделы, <kbd>D</kbd> — РНП по дням, <kbd>N</kbd> — новинки и пары, <kbd>A</kbd> — аудитория и инфографика, <kbd>R</kbd> — рекомендации, <kbd>/</kbd> — поиск артикула, <kbd>←</kbd> <kbd>→</kbd> — соседний артикул, <kbd>?</kbd> — справка. Клик по заголовку колонки — сортировка, по строке — провал внутрь, «CSV» — выгрузка таблицы.</p>
+  <p><b>Период:</b> вверху страницы — «Вчера», «Последние 2 дня», 7, 14, 30, 90 дней, прошлая неделя, этот или прошлый месяц, или свои даты. Обзор, РНП, Юнитка (воронка и реклама), Артикул, Реклама и Склейки считаются за этот период и сравниваются с предыдущим периодом такой же длины — или с теми же днями недели раньше (удобно для «вчера к прошлому вторнику»). Если сравниваемый период короче (не хватает истории), изменение считается в среднем за день. Разделы с данными MPSTATS и поиска WB работают за свои фиксированные окна — это подписано в разделе.</p>
+  <p><b>Для команды:</b> данные обновляет владелец — фразой «обнови пульт» в Claude; дата обновления — слева вверху. Заметки по артикулу (внизу страницы артикула) и отметки складов видны всем и подписаны автором; добавлять их могут люди с правом редактирования, остальные только смотрят. Пульт открывается по ссылке как обычный сайт; общие заметки видны тем, кто вошёл в Claude, а писать их могут владелец и редакторы — остальные ведут личные заметки (хранятся в их браузере). Выбранный период и вкладка запоминаются у каждого свои.</p>
+  <p><b>РНП:</b> воронка, цена, реклама, поиск и прибыль по каждому артикулу по дням; переключатели «Дни / Недели / Месяцы» сворачивают те же цифры, «В день» делает неполные периоды сравнимыми. Цвет клетки — лучше или хуже предыдущего периода (с учётом смысла: рост ДРР — плохо). Прибыль по дням — оценка по заказам дня с фактическим выкупом, удержаниями и логистикой артикула за 5 недель; в неделях и месяцах рядом — факт отчёта реализации. Вкладки РНП: «Все артикулы» (любой показатель по всем карточкам), «Реклама» (кампании, их артикулы и кластеры по дням), «Ключи и позиции» (позиция по каждому запросу по дням, вы и конкуренты).</p>
+  <p><b>Новинки и пары:</b> спрос — запросы ниши «Духи» за 30 дней (MPSTATS) с прошлым месяцем для динамики; рынок — карточки аналогов до 1 500 ₽; пары — заказы из одной корзины WB за 120 дней и составы наборов у конкурентов.</p>
+  <p><b>Модель прибыли:</b> ${esc(D.meta?.model?.note || "")}</p>
+  <p><b>Источники:</b> WB API — воронка по дням (агрегаты), поисковые запросы и итоги поиска, статистика кампаний и поисковых кластеров, лента заказов, отчёт реализации, тарифы. MPSTATS — рынок по ароматам, позиции по ключам (органика/реклама) свои и конкурентов, продажи конкурентов, отзывы. Файлы — себестоимость, склейки, «Сравнение карточек», таблица «Аналитика продаж».</p>
+  <p><b>Термины:</b> переходы — открытия карточки; CR корз. — корзины/переходы; CR заказ — заказы/корзины; CPO — расход/заказы; ДРР — расход/сумма заказов; полки — реклама в рекомендациях; ассоц. заказы — после рекламного клика купили другой ваш товар; недобор показов — сколько показов по запросу получает лучший конкурент сверх вас (оценка MPSTATS).</p>
+  <p><b>Обновление:</b> напишите Claude «обнови пульт» — соберёт свежие данные и обновит эту страницу. Новые сравнения из ЛК — архивы в «Загрузки», затем «обнови сравнения».</p></div>`;
+  $("#hclose").onclick = () => o.hidden = true; o.onclick = e => { if (e.target === o) o.hidden = true; };
+}
+
+/* ---------- поиск и клавиши ---------- */
+const qi = $("#q"), sg = $("#sugg"); let sgi = 0, sgl = [];
+qi.oninput = () => {
+  const t = qi.value.trim().toLowerCase(); if (!t) { sg.hidden = true; return; }
+  sgl = (D.sku || []).filter(s => String(s.nm).includes(t) || s.vc.toLowerCase().includes(t) || (s.aroma || "").toLowerCase().includes(t) || s.title.toLowerCase().includes(t)).sort((a, b) => b.p30.orders - a.p30.orders).slice(0, 12);
+  sgi = 0; sg.innerHTML = sgl.map((s, i) => `<div data-i="${i}" class="${i === 0 ? "on" : ""}"><span>${esc(s.vc)}</span><span class="meta mono">${s.nm} · ${N(s.p30.orders)} зак.</span></div>`).join("") || '<div class="meta">Не найдено</div>'; sg.hidden = false;
+  sg.querySelectorAll("[data-i]").forEach(d => d.onmousedown = () => pick(+d.dataset.i));
+};
+function pick(i) { const s = sgl[i]; if (!s) return; sg.hidden = true; qi.value = ""; qi.blur(); go(st.tab === "rnp" ? "rnp" : "sku", s.nm); }
+qi.onkeydown = e => {
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); sgi = Math.max(0, Math.min(sgl.length - 1, sgi + (e.key === "ArrowDown" ? 1 : -1))); sg.querySelectorAll("[data-i]").forEach((d, i) => d.classList.toggle("on", i === sgi)); }
+  if (e.key === "Enter") pick(sgi); if (e.key === "Escape") { sg.hidden = true; qi.blur(); }
+};
+qi.onblur = () => setTimeout(() => sg.hidden = true, 150);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { $("#help").hidden = true; return; }
+  if (e.target.matches("input,textarea,select")) return; if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "/") { e.preventDefault(); qi.focus(); return; }
+  if (e.key === "?") { help(); return; }
+  const t = TABS.find(x => x[2].toLowerCase() === e.key.toLowerCase() || (e.code === "Key" + x[2] && /^[A-Z]$/.test(x[2]))); if (t) { go(t[0]); return; }
+  if ((st.tab === "sku" || (st.tab === "rnp" && st.rsub !== "all")) && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const i = D.order.indexOf(st.nm); const nx = D.order[i + (e.key === "ArrowRight" ? 1 : -1)]; if (nx) go(st.tab, nx); }
+});
+boot();
+</script>
